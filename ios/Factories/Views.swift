@@ -5,13 +5,58 @@ import SwiftUI
 struct ViewFactory: PresentableProtocol {
     private let material: ViewMaterial
     private let children: [UIView]?
+    
+
     private let onEvent: EventDispatcher
-    init(material: ViewMaterial, children: [UIView]? = nil, onEvent: EventDispatcher) {
+    private var index: Int? = nil
+    private var context: [String: Any]? = nil
+    init(material: ViewMaterial, children: [UIView]? = nil, onEvent: EventDispatcher, index: Int? = nil, context: [String: Any]? = nil) {
         self.material = material
         self.children = children
         self.onEvent = onEvent
+        self.index = index
+        self.context = context
+    }
+    
+
+    // MARK: - Guage
+    @ViewBuilder
+    func gauge() -> some View {
+        if let subviews = material.subviews {
+            if #available(iOS 16.0, *) {
+                
+                let value = Double(material.value ?? 0)
+                let minValue = Double(material.minValue ?? 0)
+                let maxValue = Double(material.maxValue ?? 100)
+
+                Gauge(value: value, in: minValue...maxValue) {
+                    ForEach(subviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                } currentValueLabel: {
+                    if let current = material.currentValueLabel?.first {
+                        ViewFactory(material: current, children: children, onEvent: onEvent).toPresentable()
+                    }
+                } minimumValueLabel: {
+                    if let min = material.minimumValueLabel?.first {
+                        ViewFactory(material: min, children: children, onEvent: onEvent).toPresentable()
+                    }
+                } maximumValueLabel: {
+                    if let max = material.maximumValueLabel?.first {
+                        ViewFactory(material: max, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }.applyGaugeStyle(material.gaugeStyle)
+
+            } else {
+                ErrorMessage(message: "Gauge requires iOS 16.0 or higher")
+            }
+        } else {
+            ErrorMessage(message: "Make sure you have defined a SubView for Gauge")
+        }
     }
 
+    
+    
     // MARK: - ScrollView
 
     @ViewBuilder func scrollView() -> some View {
@@ -32,38 +77,115 @@ struct ViewFactory: PresentableProtocol {
         }
     }
 
+    
+    // MARK: - ListButton
+
+        
+    @ViewBuilder
+    func listbutton() -> some View {
+        if #available(iOS 15.0, *) {
+            if let title = material.values?.text {
+                Button(role: checkButtonRole(material.role)) {
+                    onEvent([".$onListButtonPress": ["index": index as Any, "title": title]])
+                } label: {
+                    Label(title, systemImage: material.values?.systemIconName ?? "")
+                }
+            }
+        } else {
+            Button(material.properties?.text ?? "") {
+                onEvent(["onListButtonPress": ["index": index as Any, "title": material.values?.text as Any]])
+
+            }
+        }
+    }
+
+
+    
+    
+    
     // MARK: - List
 
     @ViewBuilder func list() -> some View {
+        @State var editMode: EditMode = .inactive
         if let subviews = material.subviews {
-            List(subviews) {
-                ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
-
-            }.modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
-
+            List {
+                ForEach(Array(subviews.enumerated()), id: \.offset) { index, item in
+                    if #available(iOS 15.0, *) {
+                        ViewFactory(material: item, children: children, onEvent: onEvent)
+                            .toPresentable()
+                            .swipeActions(edge: .leading, allowsFullSwipe: material.leadingSwipeActionFullSwipeEnable ?? true ) {
+                                if let leadingSwipeActions = material.leadingSwipeActions {
+                                    ForEach(leadingSwipeActions) { swipeItem in
+                                        ViewFactory(material: swipeItem, children: children, onEvent: onEvent, index: index)
+                                            .toPresentable()
+                                    }
+                                }
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: material.trailingSwipeActionFullSwipeEnable ?? false) {
+                                if let trailingSwipeActions = material.trailingSwipeActions {
+                                    ForEach(trailingSwipeActions) { swipeItem in
+                                        ViewFactory(material: swipeItem, children: children, onEvent: onEvent, index: index)
+                                            .toPresentable()
+                                    }
+                                }
+                            }
+                    }
+                }.onMove(perform: material.enableEditing == true ? move : nil)
+                .onDelete(perform: material.enableEditing == true ? delete : nil)
+            }.environment(\.editMode, .constant(material.enableEditing == true ? .active : .inactive))
+            .modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for List")
         }
     }
 
+
+
     // MARK: - Section
 
-    @ViewBuilder func section() -> some View {
-        if let subviews = material.subviews, let optionalSubviews = material.optionalSubviews {
-            Section(header: ViewFactory(material: optionalSubviews[0], children: children, onEvent: onEvent).toPresentable()) {
-                ForEach(subviews) {
-                    ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
-                }
+    @ViewBuilder
+    func section() -> some View {
+        if let subviews = material.subviews {
+            let header = material.optionalSubviews?.first.map {
+                ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
             }
 
-        } else {
-            ErrorMessage(message: "Make sure you have defined a SubView and an optional SubView for Section")
+            let footer = material.sectionFooter?.first.map {
+                ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+            }
+
+            if let header = header, let footer = footer {
+                Section(header: header, footer: footer) {
+                    ForEach(subviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }
+            } else if let header = header {
+                Section(header: header) {
+                    ForEach(subviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }
+            } else if let footer = footer {
+                Section(footer: footer) {
+                    ForEach(subviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }
+            } else {
+                Section {
+                    ForEach(subviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }
+            }
         }
     }
 
     // MARK: - VStack
 
     @ViewBuilder func vstack() -> some View {
+        
         if let subviews = material.subviews {
             let spacing = material.properties?.spacing.toCGFloat() ?? 0
             let horizontalAlignmentKey = material.properties?.horizontalAlignment ?? "center"
@@ -93,6 +215,50 @@ struct ViewFactory: PresentableProtocol {
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for LazyVStack")
         }
+    }
+
+    // MARK: - CollapsibleSection
+    @ViewBuilder
+    func collapsiblesection() -> some View {
+        if let subviews = material.subviews {
+            let headerView = material.optionalSubviews?.first.map {
+                ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+            }
+
+
+            if #available(iOS 17.0, *), let _ = material.isExpandable {
+                let isExpanded: Binding<Bool> = Binding(
+                    get: { material.isExpandable ?? true },
+                    set: { newValue in
+                        material.isExpandable = newValue
+                        onEvent([material.values?.key ?? "expandable": ["isExpanded": newValue]])
+                    }
+                )
+
+                Section(isExpanded: isExpanded) {
+                    ForEach(subviews) { subview in
+                        ViewFactory(material: subview, children: children, onEvent: onEvent).toPresentable()
+                    }
+                } header: {
+                    if let headerView = headerView {
+                        headerView
+                    }
+                }
+
+            } else {
+                Section {
+                    ForEach(subviews) { subview in
+                        ViewFactory(material: subview, children: children, onEvent: onEvent).toPresentable()
+                    }
+                } header: {
+                    if let headerView = headerView {
+                        headerView
+                    }
+                }
+            }
+
+        }
+
     }
 
     // MARK: - HStack
@@ -256,6 +422,8 @@ struct ViewFactory: PresentableProtocol {
         }
     }
 
+    
+    
     // MARK: - DisclosureGroup
 
     @ViewBuilder func disclosureGroup() -> some View {
@@ -275,6 +443,9 @@ struct ViewFactory: PresentableProtocol {
 
     @ViewBuilder func button() -> some View {
         if let subviews = material.subviews {
+            
+            
+            
             Button {
                 onEvent([material.values?.key ?? "Button": ["action": "press"]])
             }
@@ -487,16 +658,52 @@ struct ViewFactory: PresentableProtocol {
             ErrorMessage(message: "Please specify a native view key for the CustomView")
         }
     }
+    
+    
+    // MARK: - Picker
+    
+    @ViewBuilder  func picker() -> some View {
+        if let subviews = material.subviews {
+            let selection = Binding<Int>(
+                get: { material.selection ?? 0 },
+                set: {
+                    material.selection = $0
+                    onEvent([material.values?.key ?? "picker": ["selection": $0]])
+                }
+            )
+            if let title = material.values?.text {
+                Picker(title, selection: selection) {
+                    ForEach(subviews.indices, id: \.self) { index in
+                        ViewFactory(material: subviews[index], children: children, onEvent: onEvent)
+                            .toPresentable()
+                            .tag(index)
+                    }
+                }.applyPickerStyle(material.pickerStyle)
+            } else {
+                Picker("", selection: selection) {
+                    ForEach(subviews.indices, id: \.self) { index in
+                        ViewFactory(material: subviews[index], children: children, onEvent: onEvent)
+                            .toPresentable()
+                            .tag(index)
+                    }
+                }.applyPickerStyle(material.pickerStyle)
+            }
+            
+        }
+    }
+    
 
     @ViewBuilder func buildDefault() -> some View {
         switch material.type {
         case .ScrollView: scrollView()
         case .List: list()
         case .LazyVStack: lazyVstack()
+        case .Gauge: gauge()
         case .LazyHStack: lazyHstack()
         case .VStack: vstack()
         case .HStack: hstack()
         case .ZStack: zstack()
+        case .Picker: picker()
         case .Text: text()
         case .Image: image()
         case .Spacer: spacer()
@@ -512,11 +719,13 @@ struct ViewFactory: PresentableProtocol {
         case .ControlGroup: controlGroup()
         case .Label: label()
         case .SheetView: sheetView()
+        case .CollapsibleSection: collapsiblesection()
         case .PopoverView: popoverView()
         case .MaskView: maskView()
         case .ReactChildView: ReactChildView()
         case .Section: section()
         case .Button: button()
+        case .ListButton: listbutton()
         case .CustomView: customView()
         case .NavigationView: navigationView()
         case .ToolbarItemGroup: toolbarItemGroup()
@@ -584,4 +793,52 @@ struct ViewFactory: PresentableProtocol {
 
             ))
     }
+    
+    
+    
+    
+    func move(from source: IndexSet, to destination: Int) {
+           let indices = Array(source)
+
+        onEvent(["onMove": ["indices": indices, "destination": destination]])
+       }
+
+       func delete(at offsets: IndexSet) {
+           let indices = Array(offsets)
+           onEvent(["onDelete": ["indices": indices]])
+       }
 }
+
+
+
+@available(iOS 15.0, *)
+func checkButtonRole(_ role: String?) -> ButtonRole? {
+    switch role?.lowercased() {
+    case "destructive":
+        return .destructive
+    case "cancel":
+        return .cancel
+    default:
+        return nil
+    }
+}
+
+@available(iOS 15.0, *)
+func applyPickerStyle<V: View>(_ view: V, style: String?) -> AnyView {
+    switch style?.lowercased() {
+    case "segmented":
+        return view.pickerStyle(SegmentedPickerStyle()).embedInAnyView()
+    case "menu":
+        return view.pickerStyle(MenuPickerStyle()).embedInAnyView()
+    case "wheel":
+        return view.pickerStyle(WheelPickerStyle()).embedInAnyView()
+    case "inline":
+            return view.pickerStyle(InlinePickerStyle()).embedInAnyView()
+    default:
+        return view.pickerStyle(DefaultPickerStyle()).embedInAnyView()
+    }
+}
+
+
+
+

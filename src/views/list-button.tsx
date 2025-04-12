@@ -1,11 +1,13 @@
-import React from "react";
+import * as React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
+import { SFSymbol } from "sf-symbols-typescript";
 
 export interface ButtonProps extends SwiftUIViewProperties {
-  key: string;
-
-  children: React.ReactNode;
-  onButtonPress?: () => any;
+  key?: string;
+  text: string;
+  systemIconName: SFSymbol;
+  role: "cancel" | "destructive";
+  labelStyle?: string;
 }
 
 /**
@@ -21,8 +23,8 @@ export interface ButtonProps extends SwiftUIViewProperties {
  *
  *
  */
-export const Button = (props: ButtonProps) => {
+export const ListButton = (props: ButtonProps) => {
   return null;
 };
 
-export default Button;
+export default ListButton;

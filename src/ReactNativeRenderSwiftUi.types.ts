@@ -1,12 +1,11 @@
 import { NativeSyntheticEvent, ViewProps, ViewStyle } from "react-native";
 import type { SFSymbol } from "sf-symbols-typescript";
 
-export type SwiftUiEvent  = any 
+export type SwiftUiEvent = any;
 
 export interface ReactNativeRenderSwiftUiViewProps extends ViewProps {
   data: SwiftUiJson | string;
   onEvent?: (event: { nativeEvent: SwiftUiEvent }) => void;
-  
 }
 
 type SwiftUIViewType =
@@ -37,7 +36,6 @@ type SwiftUIViewType =
   | "Section"
   | "ToolbarItemGroup"
   | "NavigationView";
-  
 
 type FontStyle =
   | "largeTitle"
@@ -104,9 +102,10 @@ export interface SwiftUIViewValues {
   title?: string;
   placeholder?: string;
   description?: string;
+  role?: string;
   index?: number;
   key?: string;
-  json?: string
+  json?: string;
 }
 
 export interface SwiftUIViewProperties {
@@ -139,8 +138,7 @@ export interface SwiftUIViewProperties {
   accessibilityValue?: string;
   accessibilityLabel?: string;
   accessibilityIdentifier?: string;
-  enableMarkdown?: boolean
-
+  enableMarkdown?: boolean;
 }
 
 export type SwiftUiJson = {

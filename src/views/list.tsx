@@ -3,6 +3,11 @@ import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
 export interface ListProps extends SwiftUIViewProperties {
   children: React.ReactNode;
+  leadingSwipeActionFullSwipeEnable?: boolean;
+  leadingSwipeActions?: React.ReactNode[];
+  trailingSwipeActions?: React.ReactNode[];
+  trailingSwipeActionFullSwipeEnable?: boolean;
+  enableEditing?: boolean;
 }
 
 /**
@@ -18,7 +23,7 @@ export interface ListProps extends SwiftUIViewProperties {
  *
  */
 
-export const List = (props: ListProps) => {
+export const List: React.FC<ListProps> = (props: ListProps) => {
   return null;
 };
 

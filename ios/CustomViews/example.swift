@@ -21,7 +21,7 @@ struct TextView: View {
    var body: some View {
        VStack{
            Image(systemName: "pencil")
-           Text("Hallo from  Swift UI")
+           Text("Hallo from Swift UI")
        }
     }
 }

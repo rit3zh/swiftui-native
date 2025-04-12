@@ -4,7 +4,7 @@ import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 export interface SectionProps extends SwiftUIViewProperties {
   children: React.ReactNode;
   optionalSubviews?: React.ReactNode;
-  sectionFooter?: React.ReactNode;
+  isExpandable?: boolean;
 }
 
 /**
@@ -21,8 +21,8 @@ export interface SectionProps extends SwiftUIViewProperties {
  *
  */
 
-export const Section = (props: SectionProps) => {
+export const CollapsibleSection = (props: SectionProps) => {
   return null;
 };
 
-export default Section;
+export default CollapsibleSection;

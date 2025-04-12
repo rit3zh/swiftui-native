@@ -7,10 +7,28 @@ interface SerializedElement {
     [key: string]: any;
   };
   subviews: SerializedElement[];
+  sectionFooter?: SerializedElement[];
   optionalSubviews: SerializedElement[];
+  leadingSwipeActions?: SerializedElement[];
+  trailingSwipeActions?: SerializedElement[];
+  trailingSwipeActionFullSwipeEnable?: boolean;
+  leadingSwipeActionFullSwipeEnable?: boolean;
   values: {
     [key: string]: any;
   };
+  role?: string;
+  selection?: number;
+  pickerStyle?: string;
+  isExpandable?: string;
+  enableEditing?: boolean;
+  value?: number;
+  minValue?: number;
+  maxValue?: number;
+
+  gaugeStyle?: string;
+  currentValueLabel?: SerializedElement[];
+  minimumValueLabel?: SerializedElement[];
+  maximumValueLabel?: SerializedElement[];
 }
 
 const filterObjByKeysArray = (
@@ -30,6 +48,7 @@ const serializeReactElement = (
   }
 
   const { type, props, key } = element;
+
   const regexPattern = /\b\w+\b/g;
   const typeMatch = type.toString().match(regexPattern);
   const filteredProperties = filterObjByKeysArray(
@@ -40,6 +59,46 @@ const serializeReactElement = (
   const serializedOptionalSubViews =
     (props.optionalSubviews &&
       React.Children.toArray(props.optionalSubviews).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+
+  const serializedSectionFooter =
+    (props.sectionFooter &&
+      React.Children.toArray(props.sectionFooter).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+
+  const currentValueLabel =
+    (props.currentValueLabel &&
+      React.Children.toArray(props.currentValueLabel).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+  const minimumValueLabel =
+    (props.minimumValueLabel &&
+      React.Children.toArray(props.minimumValueLabel).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+  const maximumValueLabel =
+    (props.minimumValueLabel &&
+      React.Children.toArray(props.maximumValueLabel).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+
+  const serializedOLeadingSwipeActions =
+    (props.leadingSwipeActions &&
+      React.Children.toArray(props.leadingSwipeActions).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+
+  const serializedOtrailingSwipeActions =
+    (props.trailingSwipeActions &&
+      React.Children.toArray(props.trailingSwipeActions).map((child) =>
         serializeReactElement(child)
       )) ||
     [];
@@ -57,17 +116,60 @@ const serializeReactElement = (
     return {
       type: typeMatch?.[1] || "",
       properties: filteredProperties || {},
-      values: { ...filteredValues, text: element.props.children},
+      values: {
+        ...filteredValues,
+        text: element.props.children,
+        role: element.props.role,
+      },
       subviews: [],
       optionalSubviews: [],
+      sectionFooter: serializedSectionFooter,
+      leadingSwipeActions: serializedOLeadingSwipeActions,
+      trailingSwipeActions: serializedOtrailingSwipeActions,
+      role: props.role,
+      selection: props.selection,
+      leadingSwipeActionFullSwipeEnable:
+        props.leadingSwipeActionFullSwipeEnable,
+      trailingSwipeActionFullSwipeEnable:
+        props.trailingSwipeActionFullSwipeEnable,
+      pickerStyle: props.pickerStyle,
+      isExpandable: props.isExpandable,
+      enableEditing: props.enableEditing,
+      minValue: props.minValue,
+      maxValue: props.maxValue,
+      value: props.value,
+      currentValueLabel,
+      maximumValueLabel,
+      minimumValueLabel,
+      gaugeStyle: props.gaugeStyle,
     };
   } else {
     return {
       type: typeMatch?.[1] || "",
       properties: filteredProperties,
-      values: {...filteredValues, key: key},
+      values: { ...filteredValues, key: key },
       subviews: serializedSubViews || [],
       optionalSubviews: serializedOptionalSubViews || [],
+      leadingSwipeActions: serializedOLeadingSwipeActions || [],
+      trailingSwipeActions: serializedOtrailingSwipeActions || [],
+      leadingSwipeActionFullSwipeEnable:
+        props.leadingSwipeActionFullSwipeEnable,
+      trailingSwipeActionFullSwipeEnable:
+        props.trailingSwipeActionFullSwipeEnable,
+      role: props.role,
+      selection: props.selection,
+      pickerStyle: props.pickerStyle,
+      sectionFooter: serializedSectionFooter,
+      isExpandable: props.isExpandable,
+      enableEditing: props.enableEditing,
+      gaugeStyle: props.gaugeStyle,
+
+      minValue: props.minValue,
+      maxValue: props.maxValue,
+      value: props.value,
+      currentValueLabel,
+      maximumValueLabel,
+      minimumValueLabel,
     };
   }
 };

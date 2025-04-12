@@ -13,6 +13,9 @@ class Values: Codable {
     var json: String?
     var index: Int?
     var key: String?
+    
+    
+    
 }
 
 class ViewMaterial: Codable, Identifiable {
@@ -22,20 +25,56 @@ class ViewMaterial: Codable, Identifiable {
     var properties: ViewProperties?
     var subviews: [ViewMaterial]?
     var optionalSubviews: [ViewMaterial]?
-
+    var leadingSwipeActions: [ViewMaterial]?
+    var trailingSwipeActions: [ViewMaterial]?
+    
+    var currentValueLabel: [ViewMaterial]?
+    var minimumValueLabel: [ViewMaterial]?
+    var maximumValueLabel:[ViewMaterial]?
+    
+    var leadingSwipeActionFullSwipeEnable: Bool?
+    var trailingSwipeActionFullSwipeEnable: Bool?
+    var role: String?
+    var selection: Int?
+    var pickerStyle: String?
+    var sectionFooter: [ViewMaterial]?
+    var isExpandable: Bool?
+    var enableEditing: Bool?
+    var maxValue: Int?
+    var minValue:Int?
+    var value:Int?
+    var gaugeStyle: String?
+    
+    
     enum CodingKeys: String, CodingKey {
         case type
         case values
         case properties
         case subviews
         case optionalSubviews
+        case leadingSwipeActions
+        case trailingSwipeActions
+        case leadingSwipeActionFullSwipeEnable
+        case trailingSwipeActionFullSwipeEnable
+        case role
+        case selection
+        case pickerStyle
+        case sectionFooter
+        case isExpandable
+        case enableEditing
+        case maxValue
+        case minValue
+        case value
+        case currentValueLabel
+        case minimumValueLabel
+        case maximumValueLabel
+        case gaugeStyle
     }
 }
 
 class ViewProperties: Codable {
     var font: String? = "body"
     var fontWeight: String? = "body"
-
     var foregroundColor: String? = "#ffffff" // Hex
     var borderColor: String? = "#ff0000" // Hex
     var borderType: String? = "default" // Hex
@@ -44,6 +83,9 @@ class ViewProperties: Codable {
     var spacing: Int? = 0
     var width: Float?
     var height: Float?
+    var destructive: Bool?
+    var text: String?
+    
 
     var minLength: Float? // Spacer
     /// background color of the whole view
@@ -78,6 +120,9 @@ class ViewProperties: Codable {
     var enableMarkdown: Bool?
     var toolbarPlacement: String?
 }
+
+
+
 
 // ScrollView
 extension SwiftUI.Axis.Set {
@@ -182,6 +227,10 @@ extension Optional where Wrapped == String {
     }
 }
 
+
+
+
+
 enum ViewType: String, Codable {
     case Image
     case Text
@@ -205,12 +254,16 @@ enum ViewType: String, Codable {
     case Label
     case ReactChildView
     case ControlGroup
+    case ListButton
     case SheetView
     case PopoverView
     case MaskView
     case Section
     case Button
     case CustomView
+    case Gauge
     case ToolbarItemGroup
     case NavigationView
+    case Picker
+    case CollapsibleSection
 }

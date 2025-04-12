@@ -4,14 +4,14 @@ import { SwiftUiEvent, SwiftUiJson } from "../ReactNativeRenderSwiftUi.types";
 import { useState } from "react";
 import { ViewStyle } from "react-native";
 import { RNSwiftUIJsonView } from "../ReactNativeRenderSwiftUiView";
+import { handleSwiftUiEvent } from "../utils/swiftUiEventManager";
 
 export interface RootViewProps {
   children: React.ReactElement;
   reactViews?: React.ReactNode[];
   style?: ViewStyle;
   onSwiftUIEvent?: (event: { nativeEvent: SwiftUiEvent }) => void;
-
-} 
+}
 
 /**
  * Creates an RNSwiftUIView in which RNSwiftUI elements can be rednered
@@ -36,6 +36,7 @@ export const RootView = (props: RootViewProps) => {
       systemIconName: "x.squareroot",
       title: "Error",
       description: "Test",
+      role: "cancel",
     },
   });
   const handleParseJSX = () => {
@@ -46,10 +47,13 @@ export const RootView = (props: RootViewProps) => {
   React.useEffect(() => {
     handleParseJSX();
   }, [props.children]);
-
   return (
-    
-    <RNSwiftUIJsonView  onEvent={props.onSwiftUIEvent} style={{...props.style,  flex: 1 }} data={data}>
+    <RNSwiftUIJsonView
+      onEvent={({ nativeEvent }) => handleSwiftUiEvent(nativeEvent)}
+      //   onEvent={props.onSwiftUIEvent}
+      style={{ ...props.style, flex: 1 }}
+      data={data}
+    >
       {props.reactViews}
     </RNSwiftUIJsonView>
   );

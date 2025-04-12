@@ -1,6 +1,10 @@
-import { RNSwiftUIJsonView } from "./ReactNativeRenderSwiftUiView";
+/** A library that makes Swift UI components available in React Native */
 import * as RNSwiftUI from "./views/index";
 
-/** A library that makes Swift UI components available in React Native */
+export default RNSwiftUI;
+export { RNSwiftUI };
 
-export { RNSwiftUI, RNSwiftUIJsonView };
+export * from "./enum";
+export * from "./hooks";
+
+export type * from "./interface";
