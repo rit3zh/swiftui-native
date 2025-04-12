@@ -1,5 +1,5 @@
 {
-  "name": "react-native-render-swift-ui",
+  "name": "swiftui-native",
   "version": "1.0.4",
   "description": "An expo module that gives you the opportunity to use SwiftUI inside every react native app",
   "main": "build/index.js",
@@ -21,13 +21,7 @@
     "react-native-render-swift-ui",
     "ReactNativeRenderSwiftUi"
   ],
-  "repository": "https://github.com/Pflaumenbaum/react-native-render-swift-ui",
-  "bugs": {
-    "url": "https://github.com/Pflaumenbaum/react-native-render-swift-ui/issues"
-  },
-  "author": "Pflaumenbaum <182399538+Pflaumenbaum@users.noreply.github.com> (https://github.com/Pflaumenbaum)",
   "license": "MIT",
-  "homepage": "https://github.com/Pflaumenbaum/react-native-render-swift-ui#readme",
   "dependencies": {
     "sf-symbols-typescript": "^2.0.0"
   },
