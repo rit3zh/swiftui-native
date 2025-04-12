@@ -57,3 +57,5 @@ yarn-error.log
 .expo/*
 
 
+#
+node_modules
