@@ -1,9 +1,11 @@
 import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
-export interface TextProps extends SwiftUIViewProperties {
-  children: React.ReactNode;
-  enableMarkdown?: boolean;
+export interface TextEditorProps extends SwiftUIViewProperties {
+  text: string;
+  textEditorStyle?: string;
+  lineLimit?: number;
+  lineSpacing?: number;
 }
 
 /**
@@ -19,8 +21,8 @@ export interface TextProps extends SwiftUIViewProperties {
  *
  */
 
-export const Text = (props: TextProps) => {
+export const TextEditor = (props: TextEditorProps) => {
   return null;
 };
 
-export default Text;
+export default TextEditor;

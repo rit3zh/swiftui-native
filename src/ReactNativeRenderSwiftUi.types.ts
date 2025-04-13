@@ -1,8 +1,6 @@
-import { NativeSyntheticEvent, ViewProps, ViewStyle } from "react-native";
+import { ViewProps } from "react-native";
 import type { SFSymbol } from "sf-symbols-typescript";
-
 export type SwiftUiEvent = any;
-
 export interface ReactNativeRenderSwiftUiViewProps extends ViewProps {
   data: SwiftUiJson | string;
   onEvent?: (event: { nativeEvent: SwiftUiEvent }) => void;
@@ -35,7 +33,12 @@ type SwiftUIViewType =
   | "MaksView"
   | "Section"
   | "ToolbarItemGroup"
-  | "NavigationView";
+  | "NavigationView"
+  | "MeshGradient"
+  | "ActionSymbol"
+  | "Stepper"
+  | "ColorPicker"
+  | "DatePicker";
 
 type FontStyle =
   | "largeTitle"
@@ -94,6 +97,7 @@ type VerticalAlignment =
 
 type HorizontalAlignment = "leading" | "center" | "trailing";
 
+type MultilineTextAlignment = "leading" | "center" | "trailing";
 export interface SwiftUIViewValues {
   text?: string;
   imageUrl?: string;
@@ -106,10 +110,22 @@ export interface SwiftUIViewValues {
   index?: number;
   key?: string;
   json?: string;
+
+  date?: string;
+  minDate?: string;
+  maxDate?: string;
+  datePickerStyle?: string;
+  labelHidden?: boolean;
+  formStyle?: string;
+  lineSpacing?: number;
+  lineLimit?: number;
+  textEditorStyle?: string;
+  toggleStyle?: string;
+  isOn?: boolean;
+  textFieldStyle?: string;
 }
 
 export interface SwiftUIViewProperties {
-  /** FontStyle */
   font?: FontStyle;
   fontWeight?: FontWeight;
   foregroundColor?: string;
@@ -123,6 +139,7 @@ export interface SwiftUIViewProperties {
   minLength?: number;
   backgroundColor?: string;
   tint?: string;
+  multilineTextAlignment?: MultilineTextAlignment;
   overlayColor?: string;
   horizontalAlignment?: HorizontalAlignment;
   verticalAlignment?: VerticalAlignment;
@@ -139,8 +156,20 @@ export interface SwiftUIViewProperties {
   accessibilityLabel?: string;
   accessibilityIdentifier?: string;
   enableMarkdown?: boolean;
+  colors?: string[];
+  points?: number[][];
+  rows?: number;
+  columns?: number;
+  smoothsColors?: boolean;
+  ignoresSafeArea?: boolean;
+  size?: number;
+  cornerRadius?: number;
+  backgroundWidth?: number;
+  backgroundHeight?: number;
+  actionBackgroundColor?: string;
+  paddingLeft?: number;
+  paddingRight?: number;
 }
-
 export type SwiftUiJson = {
   type: SwiftUIViewType;
   properties?: SwiftUIViewProperties;

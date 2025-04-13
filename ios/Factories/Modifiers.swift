@@ -40,6 +40,33 @@ enum ModifierFactory {
             }
         }
     }
+    
+    /// Applies padding to the left in case `paddingLeading` is not nil.
+    struct PaddingLeftModifier: ViewModifier {
+        var padding: CGFloat?
+
+        @ViewBuilder func body(content: Content) -> some View {
+            if let padding {
+                content.padding(.leading, padding)
+            } else {
+                content
+            }
+        }
+    }
+    /// Applies padding to the left in case `paddingTrailing` is not nil.
+
+    struct PaddingRightModifier: ViewModifier {
+        var padding: CGFloat?
+
+        @ViewBuilder func body(content: Content) -> some View {
+            if let padding {
+                content.padding(.trailing, padding)
+            } else {
+                content
+            }
+        }
+    }
+
 
     /// Applies Padding for all edges in case `padding` is not nil.
     struct PaddingModifier: ViewModifier {
@@ -179,6 +206,22 @@ enum ModifierFactory {
             }
         }
     }
+    
+    
+    struct MultilineTextAlignment: ViewModifier {
+        var alignment: String?
+        
+        @ViewBuilder func body(content: Content) -> some View {
+            switch alignment {
+            case "center": content.multilineTextAlignment(.center)
+            case "trailing": content.multilineTextAlignment(.trailing)
+            case "inset": content.multilineTextAlignment(.leading)
+            default: content
+            }
+        }
+    }
+    
+    
 
     struct AccessibilityModifer: ViewModifier {
         var hint: String?
@@ -193,6 +236,11 @@ enum ModifierFactory {
                 .accessibilityIdentifier(identifer ?? "")
         }
     }
+    
+    
+    
+    
+    
 }
 
 

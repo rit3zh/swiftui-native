@@ -26,9 +26,20 @@ export const SwiftUIViewPropertieKeys = [
   "accessibilityLabel",
   "accessibilityValue",
   "accessibilityHint",
-  "enableMarkdown"
- 
-
+  "enableMarkdown",
+  "rows",
+  "columns",
+  "colors",
+  "points",
+  "ignoresSafeArea",
+  "smoothsColors",
+  "size",
+  "cornerRadius",
+  "backgroundWidth",
+  "backgroundHeight",
+  "actionBackgroundColor",
+  "paddingLeft",
+  "paddingRight",
 ];
 
 export const SwiftUIViewValueKeys = [
@@ -41,6 +52,18 @@ export const SwiftUIViewValueKeys = [
   "description",
   "index",
   "key",
-  "json"
+  "json",
+  "date",
+  "minDate",
+  "maxDate",
+  "datePickerStyle",
+  "labelHidden",
 
+  "formStyle",
+  "lineSpacing",
+  "lineLimit",
+  "textEditorStyle",
+  "toggleStyle",
+  "isOn",
+  "textFieldStyle",
 ];

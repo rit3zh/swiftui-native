@@ -24,6 +24,84 @@ extension View {
             }
     }
     
+        @available(iOS 16.0, *)
+        @ViewBuilder
+        func applyFormStyle(_ style: String?) -> some View {
+            switch style?.lowercased() {
+            case "columns":
+                self.formStyle(.columns)
+            case "grouped":
+                self.formStyle(.grouped)
+            case "automatic":
+                self.formStyle(.automatic)
+            default:
+                self.formStyle(.grouped)
+            }
+        }
+    
+    @ViewBuilder
+    func applyToggleStyle(_ style: String?) -> some View {
+        switch style?.lowercased() {
+        case "button":
+            if #available(iOS 15.0, *) {
+                self.toggleStyle(.button)
+            } else {
+                self.toggleStyle(.automatic)
+            }
+        case "switch":
+            self.toggleStyle(.switch)
+        case "automatic":
+            self.toggleStyle(.automatic)
+        default:
+            self.toggleStyle(.automatic)
+        }
+    }
+
+
+    @available(iOS 17.0, *)
+    @ViewBuilder
+    func applyTextEdtorStyle(_ style: String?) -> some View {
+        switch style?.lowercased() {
+        case "automatic":
+            self.textEditorStyle(.automatic)
+        case "plain":
+            self.textEditorStyle(.plain)
+        default:
+            self.textEditorStyle(.automatic)
+        }
+    }
+    
+    
+//    @available(iOS 17.0, *)
+    @ViewBuilder
+    func applyTextFieldStyle(_ style: String?) -> some View {
+        switch style {
+        case "automatic":
+            self.textFieldStyle(.automatic)
+        case "plain":
+            self.textFieldStyle(.plain)
+        case "roundedBorder":
+            self.textFieldStyle(.roundedBorder)
+        default:
+            self.textFieldStyle(.automatic)
+        }
+    }
+    
+    
+    @ViewBuilder
+    func applyDatePickerStyle(_ style: String?) -> some View {
+        switch style?.lowercased() {
+        case "compact":
+            self.datePickerStyle(CompactDatePickerStyle())
+        case "wheel":
+            self.datePickerStyle(WheelDatePickerStyle())
+        case "graphical":
+            self.datePickerStyle(GraphicalDatePickerStyle())
+        default:
+            self.datePickerStyle(DefaultDatePickerStyle())
+        }
+    }
+    
 
     @ViewBuilder
     @available(iOS 16.0, *)
@@ -46,4 +124,64 @@ extension View {
     }
 
 
+}
+
+
+
+enum AnyValue: Codable {
+    case string(String)
+    case int(Int)
+    case double(Double)
+    case bool(Bool)
+    case dictionary([String: AnyValue])
+    case array([AnyValue])
+    case null
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+
+        if container.decodeNil() {
+            self = .null
+        } else if let v = try? container.decode(Bool.self) {
+            self = .bool(v)
+        } else if let v = try? container.decode(Int.self) {
+            self = .int(v)
+        } else if let v = try? container.decode(Double.self) {
+            self = .double(v)
+        } else if let v = try? container.decode(String.self) {
+            self = .string(v)
+        } else if let v = try? container.decode([String: AnyValue].self) {
+            self = .dictionary(v)
+        } else if let v = try? container.decode([AnyValue].self) {
+            self = .array(v)
+        } else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported value")
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+
+        switch self {
+        case .string(let v): try container.encode(v)
+        case .int(let v): try container.encode(v)
+        case .double(let v): try container.encode(v)
+        case .bool(let v): try container.encode(v)
+        case .dictionary(let v): try container.encode(v)
+        case .array(let v): try container.encode(v)
+        case .null: try container.encodeNil()
+        }
+    }
+
+    var value: Any {
+        switch self {
+        case .string(let v): return v
+        case .int(let v): return v
+        case .double(let v): return v
+        case .bool(let v): return v
+        case .dictionary(let v): return v.mapValues { $0.value }
+        case .array(let v): return v.map { $0.value }
+        case .null: return NSNull()
+        }
+    }
 }

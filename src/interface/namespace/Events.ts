@@ -3,28 +3,49 @@ export namespace EventTypes {
     selection: number;
   }
 
+  /**
+   * 🎯 Event Names Enum
+   *
+   * These are the **default event names** emitted by components.
+   *
+   * 👉 You can **override any event name** by providing a custom `key` prop to the component.
+   *
+   * ---
+   *
+   * @example Override Example
+   * ```jsx
+   * <Picker key="customPickerKey" />
+   * <Pressable key="customTapKey" />
+   *
+   * // Now these events will emit:
+   * // { customPickerKey: { selection: 2 } }
+   * // { customTapKey: {} }
+   * ```
+   *
+   * This allows for:
+   * - Scoped event handling per view
+   * - Dynamic listener registration
+   * - Reusability of components with unique identities
+   */
   export enum Events {
     /**
-     * 🎯 Picker Selection Event
-     *
-     * This is the default event name triggered when the Picker selection changes.
-     *
-     * 👉 You can **customize the event name** by changing the `key` prop on your Picker.
-     *
+     * 📌 Default Picker event
      * @default "onSelectionChange"
-     *
-     * @example
-     * ```jsx
-     * <Picker key="coolEvent" />
-     * // The event emitted will now be "coolEvent" instead of "onSelectionChange"
-     * ```
-     *
-     * This gives you the flexibility to listen to specific events uniquely tied to your Picker instance.
      */
     PickerSelectionChange = "onSelectionChange",
+
+    /**
+     * 📌 Default Tap Gesture event
+     * @default "onTapGesture"
+     */
+    TapGesture = "onTapGesture",
   }
 
   export interface PickerEventType {
     onSelectionChange: PickerPayloadType;
+  }
+
+  export interface TapGestureEventType {
+    onTapGesture: Record<string, never>;
   }
 }

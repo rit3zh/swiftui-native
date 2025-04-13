@@ -14,14 +14,11 @@ export const unregisterSwiftUiEvent = (key: string) => {
 
 export const handleSwiftUiEvent = (event: SwiftUiEventPayload) => {
   for (const key in event) {
-    if (key.startsWith(".$")) {
-      const actionKey = key.substring(2);
-      const handler = eventHandlers.get(actionKey);
-      if (handler) {
-        handler(event[key]);
-      } else {
-        console.warn(`No handler registered for actionKey: ${actionKey}`);
-      }
+    const normalizedKey = key.startsWith(".$") ? key.substring(2) : key;
+    const handler = eventHandlers.get(normalizedKey);
+
+    if (handler) {
+      handler(event[key]);
     }
   }
 };

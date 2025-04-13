@@ -19,6 +19,8 @@ struct ViewFactory: PresentableProtocol {
     }
     
 
+    
+    
     // MARK: - Guage
     @ViewBuilder
     func gauge() -> some View {
@@ -692,6 +694,299 @@ struct ViewFactory: PresentableProtocol {
         }
     }
     
+    
+    
+    @ViewBuilder
+    func form() -> some View {
+        if let subviews = material.subviews {
+            if #available(iOS 16.0, *) {
+                Form {
+                    ForEach(subviews) { subview in
+                        ViewFactory(material: subview, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }
+                .applyFormStyle(material.values?.formStyle)
+            } else {
+                VStack {
+                    ForEach(subviews) { subview in
+                        ViewFactory(material: subview, children: children, onEvent: onEvent).toPresentable()
+                    }
+                }
+            }
+        } else {
+            ErrorMessage(message: "Make sure you have defined subviews for Form")
+        }
+    }
+    
+    
+    @ViewBuilder
+    func texteditor () -> some View{
+        let key = material.values?.key ?? "textEditor"
+        let initialText = material.values?.text ?? ""
+        let lineSpacing = material.values?.lineSpacing ?? 2
+        let lineLimit = material.values?.lineLimit ?? 100
+        @State var text: String = initialText
+        
+        if #available(iOS 17.0, *) {
+            TextEditor(text: Binding(
+                get: { text },
+                set: { newText in
+                    text = newText
+                    material.values?.text = newText
+                    onEvent([key: ["text": newText]])
+                }
+            )).applyTextEdtorStyle(material.values?.textEditorStyle)
+                .lineSpacing(CGFloat(lineSpacing))
+                .lineLimit(lineLimit)
+        } else {
+            TextEditor(text: Binding(
+                get: { text },
+                set: { newText in
+                    text = newText
+                    material.values?.text = newText
+                    onEvent([key: ["text": newText]])
+                }
+            )).lineSpacing(CGFloat(lineSpacing))
+                .lineLimit(lineLimit)
+        }
+            
+    }
+    
+    
+    @ViewBuilder
+    func textfield () -> some View{
+        let key = material.values?.key ?? "textFieldChange"
+        let initialText = material.values?.text ?? ""
+        let placeholder = material.values?.placeholder ?? ""
+        let textFieldStyle = material.values?.textFieldStyle
+        @State var text: String = initialText
+       
+        
+        TextField(placeholder, text: Binding(
+            get: { text },
+            set: { newText in
+                text = newText
+                material.values?.text = newText
+                onEvent([key: ["text": newText]])
+            })).applyTextFieldStyle(textFieldStyle)
+        
+        
+            
+    }
+    
+    @ViewBuilder
+    func toggle() -> some View {
+        let key = material.values?.key ?? "toggle"
+        let initialState = material.values?.isOn ?? false
+        let toggleStyle = material.values?.toggleStyle
+        @State var isOn: Bool = initialState
+
+        let binding = Binding<Bool>(
+            get: { isOn },
+            set: { newValue in
+                isOn = newValue
+                material.values?.isOn = newValue
+                onEvent([key: ["isOn": newValue]])
+            }
+        )
+
+        if let subviews = material.subviews {
+            Toggle(isOn: binding) {
+                ForEach(subviews) { subview in
+                    ViewFactory(material: subview, children: children, onEvent: onEvent).toPresentable()
+                }
+            }.applyToggleStyle(toggleStyle)
+        } else {
+            Toggle(isOn: binding) {
+                     EmptyView()
+                 }.applyToggleStyle(toggleStyle)
+        }
+    }
+
+    
+    @ViewBuilder
+    func colorpicker() -> some View {
+        if #available(iOS 14.0, *) {
+            let key = material.values?.key ?? "colorPicker"
+
+            let binding = Binding<Color>(
+                get: {
+                    Color(hex: material.values?.hexColor ?? "#0000FF")
+                },
+                set: { newColor in
+                    material.values?.hexColor = newColor.toHex()
+                    onEvent([key: ["color": newColor.toHex()]])
+                }
+            )
+
+
+            ColorPicker(material.values?.title ?? "Pick Color", selection: binding, supportsOpacity: true)
+        } else {
+            ErrorMessage(message: "ColorPicker requires iOS 14.0 or higher")
+        }
+    }
+
+    
+    
+    
+    @ViewBuilder
+    func datepicker() -> some View {
+        if #available(iOS 14.0, *) {
+            let formatter = ISO8601DateFormatter()
+            
+            let key = material.values?.key ?? "datePicker"
+
+            let selectedDate = formatter.date(from: material.values?.date ?? "") ?? Date()
+            let minDate = formatter.date(from: material.values?.minDate ?? "")
+            let maxDate = formatter.date(from: material.values?.maxDate ?? "")
+
+            let title = material.values?.title ?? ""
+            let isLabelHidden = material.values?.labelHidden ?? false
+            let style = material.values?.datePickerStyle
+
+            let binding = Binding<Date>(
+                get: { selectedDate },
+                set: { newDate in
+                    let safeFormatter = ISO8601DateFormatter()
+                    let dateString = safeFormatter.string(from: newDate)
+                    material.values?.date = dateString
+                    onEvent([key: ["date": dateString]])
+                }
+            )
+
+            let datePicker = DatePicker(
+                title,
+                selection: binding,
+                in: (minDate ?? .distantPast)...(maxDate ?? .distantFuture),
+                displayedComponents: [.date]
+            )
+            .applyDatePickerStyle(style)
+            .padding()
+
+            if isLabelHidden {
+                datePicker.labelsHidden()
+            } else {
+                datePicker
+            }
+
+        } else {
+            ErrorMessage(message: "DatePicker requires iOS 14.0 or higher")
+        }
+    }
+
+    @ViewBuilder
+    func stepper() -> some View {
+        let key = material.values?.key ?? "stepper"
+        let minValue = material.minValue ?? 4
+        let maxValue = material.maxValue ?? 10
+        let step = material.step ?? 1
+
+        let binding = Binding<Int>(
+            get: { material.value ?? 0 },
+            set: { newValue in
+                let clamped = max(min(newValue, maxValue), minValue)
+                material.value = clamped
+                onEvent([key: ["value": clamped]])
+            }
+        )
+
+        Stepper(
+            material.values?.title ?? "",
+            value: binding, in: minValue...maxValue, step: step)
+    }
+
+    
+        
+    @ViewBuilder
+    func meshgradient() -> some View {
+      if #available(iOS 18.0, *) {
+        let colors: [Color] = (material.properties?.colors?.map { Color(hex: $0) }) ?? [.blue, .purple, .green]
+        let basePoints: [[Double]] = material.properties?.points ?? []
+
+        let rows = material.properties?.rows ?? 3
+        let columns = material.properties?.columns ?? 3
+        let smooth = material.properties?.smoothsColors ?? true
+        let ignoresSafe = material.properties?.ignoresSafeArea ?? true
+        let animationType = material.properties?.animationType ?? "none"
+
+        // 🔁 Binding to external isAnimating state
+        let animationBinding = Binding<Bool>(
+          get: { material.properties?.isAnimating ?? false },
+          set: { newValue in
+            material.properties?.isAnimating = newValue
+            onEvent([material.values?.key ?? "meshgradient": ["isAnimating": newValue]])
+          }
+        )
+
+        let animatedPoints: [[Double]] = basePoints.enumerated().map { index, point in
+          guard point.count == 2 else { return point }
+          switch animationType {
+          case "pulse":
+            return [
+              point[0] + (animationBinding.wrappedValue ? 0.02 : -0.02),
+              point[1] + (animationBinding.wrappedValue ? -0.02 : 0.02)
+            ]
+          case "squish":
+            return index == 4 ? [point[0], animationBinding.wrappedValue ? 0.8 : 0.5] : point
+          case "wave":
+            return index % 2 == 0 ?
+              [point[0] + (animationBinding.wrappedValue ? 0.02 : -0.02), point[1]] :
+              point
+          default:
+            return point
+          }
+        }
+
+        MeshGradient(
+          width: columns,
+          height: rows,
+          points: animatedPoints.map { SIMD2<Float>(Float($0[0]), Float($0[1])) },
+          colors: colors,
+          smoothsColors: smooth
+        )
+        .ignoresSafeArea(edges: ignoresSafe ? .all : [])
+      } else {
+        ErrorMessage(message: "MeshGradient requires iOS 18 or newer.")
+      }
+    }
+
+
+
+    // MARK: - ActionSymbol
+    
+    @ViewBuilder
+    func actionsymbol() -> some View {
+      if let systemName = material.values?.systemIconName {
+        let iconWeightKey = material.properties?.fontWeight ?? "regular"
+        let iconSize = CGFloat(material.properties?.size ?? 20)
+        let bgColor = Color(hex: material.properties?.backgroundColor ?? "#00000020")
+        let cornerRadius = CGFloat(material.properties?.cornerRadius ?? 10)
+        let width = CGFloat(material.properties?.backgroundWidth ?? 44)
+        let height = CGFloat(material.properties?.backgroundHeight ?? 44)
+          let actionBackgroundColor = Color(hex: material.properties?.actionBackgroundColor ?? "#FFFFFF")
+        let fontWeight = Font.Weight.pick[iconWeightKey] ?? .regular
+          
+          if #available(iOS 15.0, *) {
+              Image(systemName: systemName)
+                  .font(.system(size: iconSize, weight: fontWeight))
+              
+                  .frame(width: width, height: height)
+                  .background(
+                    RoundedRectangle(cornerRadius: cornerRadius).foregroundStyle(actionBackgroundColor)
+                  )
+          } else {
+              ErrorMessage(message: "In order to use Action Symbol your iOS version must be 15.0 or higher.")
+          }
+      } else {
+        ErrorMessage(message: "Missing systemIconName for ActionSymbol")
+      }
+    }
+    
+    
+    
+    
+    
+    
 
     @ViewBuilder func buildDefault() -> some View {
         switch material.type {
@@ -729,21 +1024,37 @@ struct ViewFactory: PresentableProtocol {
         case .CustomView: customView()
         case .NavigationView: navigationView()
         case .ToolbarItemGroup: toolbarItemGroup()
+        case .MeshGradient: meshgradient()
+        case .ActionSymbol: actionsymbol()
+        case .ColorPicker : colorpicker()
+        case .DatePicker: datepicker()
+        case .Stepper: stepper()
+        case .Form: form()
+        case .Toggle: toggle()
+        case .TextEditor: texteditor()
+        case .TextField: textfield()
+            
         default: EmptyView()
         }
     }
 
     @ViewBuilder func toPresentable() -> some View {
         let prop = material.properties
+        let actionKey = material.values?.key ?? "onTapGesture"
 
         let uiComponent = buildDefault().embedInAnyView()
+        
+        
         uiComponent
             .modifier(ModifierFactory.PaddingModifier(padding: prop?.padding.toCGFloat()))
+            .modifier(ModifierFactory.PaddingLeftModifier(padding: prop?.paddingLeft.toCGFloat()))
+            .modifier(ModifierFactory.PaddingRightModifier(padding: prop?.paddingRight.toCGFloat()))
             .modifier(ModifierFactory.ForegroundModifier(foregroundColor: prop?.foregroundColor.toColor()))
             .modifier(ModifierFactory.BorderModifier(
                 borderColor: prop?.borderColor.toColor(),
                 borderWidth: prop?.borderWidth.toCGFloat()
             ))
+        
             .modifier(ModifierFactory.FrameModifier(
                 width: prop?.width.toCGFloat(),
                 height: prop?.height.toCGFloat()
@@ -756,6 +1067,7 @@ struct ViewFactory: PresentableProtocol {
                 tint: prop?.tint.toColor()
 
             ))
+            
             .modifier(ModifierFactory.ColorOverlayModifer(
                 color: prop?.overlayColor.toColor()
 
@@ -772,6 +1084,7 @@ struct ViewFactory: PresentableProtocol {
                 hidden: prop?.navigationBarHidden ?? false
 
             ))
+            
             .modifier(ModifierFactory.IgnoreSafeAreaModifer(
                 ignore: prop?.ignoreSafeArea ?? false
 
@@ -792,10 +1105,12 @@ struct ViewFactory: PresentableProtocol {
                 identifer: prop?.accessibilityIdentifier
 
             ))
+            .modifier(ModifierFactory.MultilineTextAlignment(alignment: prop?.multilineTextAlignment))
+    
     }
     
     
-    
+
     
     func move(from source: IndexSet, to destination: Int) {
            let indices = Array(source)
@@ -807,6 +1122,10 @@ struct ViewFactory: PresentableProtocol {
            let indices = Array(offsets)
            onEvent(["onDelete": ["indices": indices]])
        }
+    
+    
+    
+
 }
 
 

@@ -29,6 +29,8 @@ interface SerializedElement {
   currentValueLabel?: SerializedElement[];
   minimumValueLabel?: SerializedElement[];
   maximumValueLabel?: SerializedElement[];
+  items?: any[];
+  step?: number;
 }
 
 const filterObjByKeysArray = (
@@ -142,6 +144,7 @@ const serializeReactElement = (
       maximumValueLabel,
       minimumValueLabel,
       gaugeStyle: props.gaugeStyle,
+      step: props.step,
     };
   } else {
     return {
@@ -167,6 +170,7 @@ const serializeReactElement = (
       minValue: props.minValue,
       maxValue: props.maxValue,
       value: props.value,
+      step: props.step,
       currentValueLabel,
       maximumValueLabel,
       minimumValueLabel,

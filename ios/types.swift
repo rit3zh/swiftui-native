@@ -13,9 +13,24 @@ class Values: Codable {
     var json: String?
     var index: Int?
     var key: String?
+    var hexColor:String?
     
     
     
+    var date: String?
+    var minDate: String?
+    var maxDate: String?
+    var datePickerStyle: String?
+    var labelHidden: Bool?
+    
+    
+    var formStyle: String?
+    var textEditorStyle: String?
+    var lineSpacing: Int?
+    var lineLimit: Int?
+    var isOn: Bool?
+    var toggleStyle: String?
+    var textFieldStyle: String?
 }
 
 class ViewMaterial: Codable, Identifiable {
@@ -43,7 +58,10 @@ class ViewMaterial: Codable, Identifiable {
     var maxValue: Int?
     var minValue:Int?
     var value:Int?
+    var step: Int?
     var gaugeStyle: String?
+
+    
     
     
     enum CodingKeys: String, CodingKey {
@@ -80,6 +98,8 @@ class ViewProperties: Codable {
     var borderType: String? = "default" // Hex
     var borderWidth: Int? = 0
     var padding: Int? = 0
+    var paddingLeft: Int? = 0
+    var paddingRight: Int? = 0
     var spacing: Int? = 0
     var width: Float?
     var height: Float?
@@ -119,6 +139,29 @@ class ViewProperties: Codable {
     var textSelection: Bool?
     var enableMarkdown: Bool?
     var toolbarPlacement: String?
+    
+    /// mesh gradient
+    var rows: Int? = 3
+    var columns: Int? = 3
+    var colors: [String]?
+    var points: [[Double]]?
+    var smoothsColors: Bool? = true
+    var ignoresSafeArea: Bool? = true
+    var animationType: String? = "pulse"
+    var isAnimating: Bool? = true
+    
+    /// action symbol
+    
+    var size: Float?
+    var cornerRadius: Float? = 10
+    var backgroundWidth: Float?
+    var backgroundHeight: Float?
+    var actionBackgroundColor: String?
+    
+    
+    var multilineTextAlignment: String?
+    
+    
 }
 
 
@@ -189,6 +232,9 @@ extension SwiftUI.Font.Weight {
     ]
 }
 
+
+
+
 // VStack
 extension SwiftUI.ToolbarItemPlacement {
     static let pick: [String: SwiftUI.ToolbarItemPlacement] = [
@@ -230,7 +276,6 @@ extension Optional where Wrapped == String {
 
 
 
-
 enum ViewType: String, Codable {
     case Image
     case Text
@@ -266,4 +311,16 @@ enum ViewType: String, Codable {
     case NavigationView
     case Picker
     case CollapsibleSection
+    case MeshGradient
+    case ActionSymbol
+    case ForEach
+    case ColorPicker
+    case DatePicker
+    case Stepper
+    case Form
+    case TextEditor
+    case TextField
+    case Toggle
+    
+    
 }

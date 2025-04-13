@@ -1,9 +1,10 @@
 import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
-export interface TextProps extends SwiftUIViewProperties {
-  children: React.ReactNode;
-  enableMarkdown?: boolean;
+export interface ToggleProps extends SwiftUIViewProperties {
+  isOn: boolean;
+  children?: React.ReactNode;
+  toggleStyle?: string;
 }
 
 /**
@@ -19,8 +20,8 @@ export interface TextProps extends SwiftUIViewProperties {
  *
  */
 
-export const Text = (props: TextProps) => {
+export const Toggle = (props: ToggleProps) => {
   return null;
 };
 
-export default Text;
+export default Toggle;

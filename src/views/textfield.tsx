@@ -1,9 +1,10 @@
 import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
-export interface TextProps extends SwiftUIViewProperties {
-  children: React.ReactNode;
-  enableMarkdown?: boolean;
+export interface TextFieldProps extends SwiftUIViewProperties {
+  text: string;
+  textFieldStyle?: string;
+  placeholder?: string;
 }
 
 /**
@@ -19,8 +20,8 @@ export interface TextProps extends SwiftUIViewProperties {
  *
  */
 
-export const Text = (props: TextProps) => {
+export const TextField = (props: TextFieldProps) => {
   return null;
 };
 
-export default Text;
+export default TextField;

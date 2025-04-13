@@ -4,6 +4,7 @@
   "description": "An expo module that gives you the opportunity to use SwiftUI inside every react native app",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "homepage": "https://github.com/rit3zh/swiftui-native",
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
@@ -22,6 +23,7 @@
     "ReactNativeRenderSwiftUi"
   ],
   "license": "MIT",
+  "author": "rit3zh",
   "dependencies": {
     "sf-symbols-typescript": "^2.0.0"
   },
