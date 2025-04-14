@@ -4,7 +4,6 @@
  */
 export function toSwiftDate(input: Date | string): string {
   if (input instanceof Date) {
-    // Use actual UTC midnight
     return new Date(
       Date.UTC(input.getUTCFullYear(), input.getUTCMonth(), input.getUTCDate())
     )
@@ -12,7 +11,6 @@ export function toSwiftDate(input: Date | string): string {
       .replace(/\.\d{3}Z$/, "Z");
   }
 
-  // Normalize non-ISO formats to ISO
   const cleaned = input.trim().replace(/[^0-9a-zA-Z]/g, "-");
   const parts = cleaned.split("-").filter(Boolean);
 
@@ -22,12 +20,10 @@ export function toSwiftDate(input: Date | string): string {
 
   if (parts.length === 3) {
     if (parts[0].length === 4) {
-      // yyyy-mm-dd
       year = parseInt(parts[0]);
       month = parseInt(parts[1]) - 1;
       day = parseInt(parts[2]) + 1;
     } else if (parts[2].length === 4) {
-      // dd-mm-yyyy
       year = parseInt(parts[2]);
       month = parseInt(parts[1]) - 1;
       day = parseInt(parts[0]);
