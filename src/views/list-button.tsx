@@ -8,6 +8,7 @@ export interface ButtonProps extends SwiftUIViewProperties {
   systemIconName: SFSymbol;
   role: "cancel" | "destructive";
   labelStyle?: string;
+  tint?: string;
 }
 
 /**

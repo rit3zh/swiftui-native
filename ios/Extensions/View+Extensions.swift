@@ -4,6 +4,16 @@ extension View {
     func embedInAnyView() -> AnyView {
         AnyView(self)
     }
+        
+        @ViewBuilder
+    func applyIf<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+          if condition {
+              transform(self)
+          } else {
+              self
+          }
+      }
+    
         @ViewBuilder
         func applyPickerStyle(_ style: String?) -> some View {
             if #available(iOS 14.0, *) {

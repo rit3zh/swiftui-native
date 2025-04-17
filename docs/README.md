@@ -1,41 +1,40 @@
-# Website
+# Nextra Docs Starter 
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+This starter template includes the following features:
 
-### Installation
+- [x] **Nextra 4**
+- [x] **Search with Pagefind**
+- [x] **Lucide Icons**
 
-```
-$ yarn
-```
+[**Live Demo →**](https://nextra-docs-starter.vercel.app)
 
-### Local Development
+[![](.github/screenshot.png)](https://nextra-docs-starter.vercel.app)
 
-```
-$ yarn start
-```
+## Quick Start
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+You can deploy this template on Vercel by clicking the button below
 
-### Build
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fphucbm%2Fnextra-docs-starter)
 
-```
-$ yarn build
-```
+## Local Development
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+### Clone this repository
 
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
+Using the GitHub CLI:
+```bash
+gh repo clone phucbm/nextra-docs-starter
 ```
 
-Not using SSH:
-
+### Install
+```bash
+pnpm i
 ```
-$ GIT_USER=<Your GitHub username> yarn deploy
+
+### Run the development server
+```bash
+pnpm dev
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+## License
+
+This project is licensed under the MIT License.

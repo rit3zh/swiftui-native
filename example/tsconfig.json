@@ -3,8 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "react-native-render-swift-ui": ["../src/index"],
-      "react-native-render-swift-ui/*": ["../src/*"]
+      "swiftui-native": ["../src/index"],
+      "swiftui-native/*": ["../src/*"]
     }
   }
 }

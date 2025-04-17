@@ -7,6 +7,8 @@ export interface NavigationSplitViewProps extends SwiftUIViewProperties {
   title?: string;
 }
 
+function getState() {}
+
 /**
  * Displays a Swift UI NavigationSplitView
  *

@@ -169,6 +169,8 @@ export interface SwiftUIViewProperties {
   actionBackgroundColor?: string;
   paddingLeft?: number;
   paddingRight?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
 }
 export type SwiftUiJson = {
   type: SwiftUIViewType;

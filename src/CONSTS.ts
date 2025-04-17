@@ -40,6 +40,8 @@ export const SwiftUIViewPropertieKeys = [
   "actionBackgroundColor",
   "paddingLeft",
   "paddingRight",
+  "paddingTop",
+  "paddingBottom",
 ];
 
 export const SwiftUIViewValueKeys = [

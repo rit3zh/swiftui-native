@@ -6,7 +6,6 @@ export interface ToggleProps extends SwiftUIViewProperties {
   children?: React.ReactNode;
   toggleStyle?: string;
 }
-
 /**
  * Displays a Swift UI Text
  *

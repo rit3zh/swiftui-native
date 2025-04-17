@@ -46,11 +46,13 @@ class ViewMaterial: Codable, Identifiable {
     var currentValueLabel: [ViewMaterial]?
     var minimumValueLabel: [ViewMaterial]?
     var maximumValueLabel:[ViewMaterial]?
-    
+    var scopes: [ViewMaterial]?
+    var searchSuggestions: [ViewMaterial]?
     var leadingSwipeActionFullSwipeEnable: Bool?
     var trailingSwipeActionFullSwipeEnable: Bool?
     var role: String?
     var selection: Int?
+    var tint: String?
     var pickerStyle: String?
     var sectionFooter: [ViewMaterial]?
     var isExpandable: Bool?
@@ -60,6 +62,8 @@ class ViewMaterial: Codable, Identifiable {
     var value:Int?
     var step: Int?
     var gaugeStyle: String?
+    var searchable: [String: String]?
+    
 
     
     
@@ -78,6 +82,7 @@ class ViewMaterial: Codable, Identifiable {
         case selection
         case pickerStyle
         case sectionFooter
+        case scopes
         case isExpandable
         case enableEditing
         case maxValue
@@ -87,6 +92,8 @@ class ViewMaterial: Codable, Identifiable {
         case minimumValueLabel
         case maximumValueLabel
         case gaugeStyle
+        case searchable
+        case searchSuggestions
     }
 }
 
@@ -100,6 +107,8 @@ class ViewProperties: Codable {
     var padding: Int? = 0
     var paddingLeft: Int? = 0
     var paddingRight: Int? = 0
+    var paddingTop: Int? = 0
+    var paddingBottom: Int? = 0
     var spacing: Int? = 0
     var width: Float?
     var height: Float?
@@ -154,6 +163,7 @@ class ViewProperties: Codable {
     
     var size: Float?
     var cornerRadius: Float? = 10
+    var borderRadius: Float? = 0
     var backgroundWidth: Float?
     var backgroundHeight: Float?
     var actionBackgroundColor: String?

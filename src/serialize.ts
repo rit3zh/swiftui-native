@@ -1,6 +1,9 @@
 import React from "react";
 import { SwiftUIViewPropertieKeys, SwiftUIViewValueKeys } from "./CONSTS";
 
+interface Searchable {
+  prompt?: string;
+}
 interface SerializedElement {
   type: string;
   properties: {
@@ -11,6 +14,7 @@ interface SerializedElement {
   optionalSubviews: SerializedElement[];
   leadingSwipeActions?: SerializedElement[];
   trailingSwipeActions?: SerializedElement[];
+  scopes?: SerializedElement[];
   trailingSwipeActionFullSwipeEnable?: boolean;
   leadingSwipeActionFullSwipeEnable?: boolean;
   values: {
@@ -27,10 +31,13 @@ interface SerializedElement {
 
   gaugeStyle?: string;
   currentValueLabel?: SerializedElement[];
+  searchSuggestions?: SerializedElement[];
   minimumValueLabel?: SerializedElement[];
   maximumValueLabel?: SerializedElement[];
   items?: any[];
   step?: number;
+  tint?: string;
+  searchable?: Searchable;
 }
 
 const filterObjByKeysArray = (
@@ -68,6 +75,12 @@ const serializeReactElement = (
   const serializedSectionFooter =
     (props.sectionFooter &&
       React.Children.toArray(props.sectionFooter).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+  const serializeScopes =
+    (props.scopes &&
+      React.Children.toArray(props.scopes).map((child) =>
         serializeReactElement(child)
       )) ||
     [];
@@ -110,7 +123,12 @@ const serializeReactElement = (
         serializeReactElement(child)
       )) ||
     [];
-
+  const serializedSearchSuggestions =
+    (props.searchSuggestions &&
+      React.Children.toArray(props.searchSuggestions).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
   if (
     typeof element.props.children === "string" ||
     typeof element.props.children === "number"
@@ -126,6 +144,7 @@ const serializeReactElement = (
       subviews: [],
       optionalSubviews: [],
       sectionFooter: serializedSectionFooter,
+      scopes: serializeScopes,
       leadingSwipeActions: serializedOLeadingSwipeActions,
       trailingSwipeActions: serializedOtrailingSwipeActions,
       role: props.role,
@@ -145,6 +164,9 @@ const serializeReactElement = (
       minimumValueLabel,
       gaugeStyle: props.gaugeStyle,
       step: props.step,
+      tint: props.tint,
+      searchable: props.searchable,
+      searchSuggestions: serializedSearchSuggestions,
     };
   } else {
     return {
@@ -166,6 +188,7 @@ const serializeReactElement = (
       isExpandable: props.isExpandable,
       enableEditing: props.enableEditing,
       gaugeStyle: props.gaugeStyle,
+      searchSuggestions: serializedSearchSuggestions,
 
       minValue: props.minValue,
       maxValue: props.maxValue,
@@ -173,7 +196,10 @@ const serializeReactElement = (
       step: props.step,
       currentValueLabel,
       maximumValueLabel,
+      scopes: serializeScopes,
       minimumValueLabel,
+      tint: props.tint,
+      searchable: props.searchable,
     };
   }
 };

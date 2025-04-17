@@ -1,0 +1,17 @@
+export enum Color {
+  Red = "#FF3B30",
+  Orange = "#FF9500",
+  Yellow = "#FFCC00",
+  Green = "#34C759",
+  Mint = "#00C7BE",
+  Teal = "#5AC8FA",
+  Cyan = "#32ADE6",
+  Blue = "#007AFF",
+  Indigo = "#5856D6",
+  Purple = "#AF52DE",
+  Pink = "#FF2D55",
+  Brown = "#A2845E",
+  Gray = "#8E8E93",
+  Black = "#000000",
+  White = "#FFFFFF",
+}

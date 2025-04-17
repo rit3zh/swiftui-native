@@ -66,6 +66,34 @@ enum ModifierFactory {
             }
         }
     }
+    
+    /// Applies padding to the left in case `paddingTop` is not nil.
+
+    struct PaddingTopModifier: ViewModifier {
+        var padding: CGFloat?
+
+        @ViewBuilder func body(content: Content) -> some View {
+            if let padding {
+                content.padding(.top, padding)
+            } else {
+                content
+            }
+        }
+    }
+    
+    /// Applies padding to the left in case `paddingTop` is not nil.
+
+    struct PaddingBottomModifier: ViewModifier {
+        var padding: CGFloat?
+
+        @ViewBuilder func body(content: Content) -> some View {
+            if let padding {
+                content.padding(.bottom, padding)
+            } else {
+                content
+            }
+        }
+    }
 
 
     /// Applies Padding for all edges in case `padding` is not nil.

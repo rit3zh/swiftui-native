@@ -9,13 +9,15 @@ struct ViewFactory: PresentableProtocol {
 
     private let onEvent: EventDispatcher
     private var index: Int? = nil
+    private var menuIndex: Int? = nil
     private var context: [String: Any]? = nil
-    init(material: ViewMaterial, children: [UIView]? = nil, onEvent: EventDispatcher, index: Int? = nil, context: [String: Any]? = nil) {
+    init(material: ViewMaterial, children: [UIView]? = nil, onEvent: EventDispatcher, index: Int? = nil, context: [String: Any]? = nil, menuIndex: Int? = nil) {
         self.material = material
         self.children = children
         self.onEvent = onEvent
         self.index = index
         self.context = context
+        self.menuIndex = menuIndex
     }
     
 
@@ -85,18 +87,23 @@ struct ViewFactory: PresentableProtocol {
         
     @ViewBuilder
     func listbutton() -> some View {
+        let foregroundColor = Color(hex: material.properties?.foregroundColor ?? "#FFFFFF")
         if #available(iOS 15.0, *) {
+            
             if let title = material.values?.text {
                 Button(role: checkButtonRole(material.role)) {
                     onEvent([".$onListButtonPress": ["index": index as Any, "title": title]])
                 } label: {
-                    Label(title, systemImage: material.values?.systemIconName ?? "")
+                    Label(title, systemImage: material.values?.systemIconName ?? "").tint(material.tint.toColor())
                 }
             }
         } else {
-            Button(material.properties?.text ?? "") {
-                onEvent(["onListButtonPress": ["index": index as Any, "title": material.values?.text as Any]])
-
+            if #available(iOS 16.0, *) {
+                Button(material.properties?.text ?? "") {
+                    onEvent(["onListButtonPress": ["index": index as Any, "title": material.values?.text as Any]])
+                    
+                    
+                }
             }
         }
     }
@@ -313,20 +320,87 @@ struct ViewFactory: PresentableProtocol {
 
     // MARK: - NavigationView
 
-    @ViewBuilder func navigationView() -> some View {
+    @ViewBuilder
+    func navigationView() -> some View {
         if let subviews = material.subviews {
+            @State var searchText: String = material.searchable?["initialText"] ?? ""
+            @State var selectedScopeIndex: Int = 0
+
             NavigationView {
-                ForEach(subviews) {
+                let view = ForEach(subviews) {
                     ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
                 }
                 .navigationTitle(material.values?.title ?? "")
                 .navigationViewStyle(.stack)
-            }
+                
 
+                if let searchable = material.searchable {
+                    if #available(iOS 15.0, *) {
+                        let placement = checkSearchPlacement(searchable["placement"])
+
+                        if #available(iOS 16.0, *) {
+                            view
+                                .searchable(
+                                    text: Binding(
+                                        get: { searchText },
+                                        set: { newValue in
+                                            searchText = newValue
+                                            onEvent(["onChangeText": [
+                                                "text": newValue
+                                            ]])
+                                        }
+                                    ),
+                                    placement: placement,
+                                    prompt: Text(searchable["placeholder"] ?? "Search")
+                                )
+                                .onSubmit(of: .search) {
+                                    onEvent(["onSubmitText": [
+                                        "submittedText": searchText
+                                    ]])
+                                }
+                                
+                                .searchScopes(Binding(
+                                    get: { selectedScopeIndex },
+                                    set: { newIndex in
+                                        selectedScopeIndex = newIndex
+                                        onEvent(["onScopeChange": [
+                                            "selectedScopeIndex": newIndex
+                                        ]])
+                                    }
+                                )) {
+                                    if let scopeViews = material.scopes {
+                                        ForEach(Array(scopeViews.enumerated()), id: \.element.id) { index, scope in
+                                            ViewFactory(material: scope, children: children, onEvent: onEvent)
+                                                .toPresentable()
+                                                .tag(index)
+                                        }
+                                    }
+                                }.searchSuggestions {
+                                    if let suggestionViews = material.searchSuggestions {
+                                        ForEach(suggestionViews) { suggestion in
+                                            ViewFactory(material: suggestion, children: children, onEvent: onEvent)
+                                                .toPresentable()
+                                        }
+                                    }
+                                }
+                                
+                        } else {
+                            // Fallback on earlier versions
+                        }
+                    } else {
+                        ErrorMessage(message: "Searchable is only available on iOS 15.0 or later.")
+                    }
+                } else {
+                    view
+                }
+            }
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for NavigationView")
         }
     }
+
+
+
 
     // MARK: - Text
 
@@ -355,6 +429,7 @@ struct ViewFactory: PresentableProtocol {
         let fontHashValue = material.properties?.font ?? "body"
         let font = Font.pick[fontHashValue]
         let fontWeightHashValue = material.properties?.fontWeight ?? "regular"
+        
         let fontWeight = Font.Weight.pick[fontWeightHashValue]
         Label(material.values?.text ?? "", systemImage: material.values?.systemIconName ?? "")
             .font(font)
@@ -363,6 +438,7 @@ struct ViewFactory: PresentableProtocol {
     // MARK: - Image
 
     @ViewBuilder func image() -> some View {
+        let cornerRadius = CGFloat(material.properties?.cornerRadius ?? 10)
         if let systemIconName = material.values?.systemIconName {
             Image(systemName: systemIconName)
                 .resizable()
@@ -376,6 +452,7 @@ struct ViewFactory: PresentableProtocol {
             KFImage(URL(string: remoteUrl))
                 .resizable()
                 .scaledToFit()
+                .clipShape(.rect(cornerRadius: cornerRadius))
         } else {
             ErrorMessage(message: "Image value could not be read")
         }
@@ -449,7 +526,7 @@ struct ViewFactory: PresentableProtocol {
             
             
             Button {
-                onEvent([material.values?.key ?? "Button": ["action": "press"]])
+                onEvent([material.values?.key ?? "Button": ["action": "press", "index": menuIndex as Any]])
             }
             label: {
                 ForEach(subviews) {
@@ -532,11 +609,11 @@ struct ViewFactory: PresentableProtocol {
 
     @ViewBuilder func contextMenu() -> some View {
         if let subviews = material.subviews, let optionalSubviews = material.optionalSubviews {
-            ForEach(subviews) {
-                ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+            ForEach(Array(subviews.enumerated()), id: \.offset) { index, item in
+                ViewFactory(material: item, children: children, onEvent: onEvent, menuIndex: index).toPresentable()
                     .contextMenu {
                         ForEach(optionalSubviews) {
-                            ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                            ViewFactory(material: $0, children: children, onEvent: onEvent,menuIndex: index).toPresentable()
                         }
                     }
             }
@@ -1049,6 +1126,8 @@ struct ViewFactory: PresentableProtocol {
             .modifier(ModifierFactory.PaddingModifier(padding: prop?.padding.toCGFloat()))
             .modifier(ModifierFactory.PaddingLeftModifier(padding: prop?.paddingLeft.toCGFloat()))
             .modifier(ModifierFactory.PaddingRightModifier(padding: prop?.paddingRight.toCGFloat()))
+            .modifier(ModifierFactory.PaddingTopModifier(padding: prop?.paddingTop.toCGFloat()))
+            .modifier(ModifierFactory.PaddingBottomModifier(padding: prop?.paddingBottom.toCGFloat()))
             .modifier(ModifierFactory.ForegroundModifier(foregroundColor: prop?.foregroundColor.toColor()))
             .modifier(ModifierFactory.BorderModifier(
                 borderColor: prop?.borderColor.toColor(),
@@ -1161,3 +1240,19 @@ func applyPickerStyle<V: View>(_ view: V, style: String?) -> AnyView {
 
 
 
+
+@available(iOS 15.0, *)
+func checkSearchPlacement(_ placement: String?) -> SwiftUI.SearchFieldPlacement {
+  switch placement {
+  case "navigationBarDrawerAlways":
+    return .navigationBarDrawer(displayMode: .always)
+  case "navigationBarDrawer":
+      return .navigationBarDrawer
+  case "sidebar":
+      return .sidebar
+  case "toolabar":
+      return .toolbar
+  default:
+    return .automatic
+  }
+}

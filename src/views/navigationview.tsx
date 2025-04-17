@@ -1,9 +1,20 @@
 import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
-
+interface Searchable {
+  placeholder?: string;
+  placement?:
+    | "nnavigationBarDrawerAlways"
+    | "navigationBarDrawer"
+    | "sidebar"
+    | "toolabar";
+  initialText?: string;
+}
 export interface NavigationViewProps extends SwiftUIViewProperties {
   children: React.ReactNode;
-  title?: string
+  title?: string;
+  searchable?: Searchable;
+  scopes?: React.ReactNode[];
+  searchSuggestions?: React.ReactNode[];
 }
 
 /**
