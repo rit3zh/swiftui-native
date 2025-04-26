@@ -9,7 +9,7 @@ export interface ScrollViewProps extends SwiftUIViewProperties {
  * Displays a Swift UI ScrollVIew
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param children - The view to display in the ScrollView
  * @extends SwiftUIViewProperties

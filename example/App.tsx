@@ -1,11 +1,20 @@
 import React from "react";
-import { DarkTheme, NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Contacts, Playlist, Settings } from "./src/screens";
-const { Navigator, Screen } = createNativeStackNavigator();
+import { Contacts, GoalScreen, Playlist, Settings } from "./src/screens";
+import SwiftUI from "swiftui-native";
 
 const App: React.FunctionComponent = (): React.ReactNode => {
-  return <Playlist />;
+  return (
+    <SwiftUI.RootView>
+      <SwiftUI.List>
+        <SwiftUI.CollapsibleSection
+          optionalSubviews={<SwiftUI.Text>Section 1</SwiftUI.Text>}
+          isExpandable={true}
+        >
+          <SwiftUI.Text>Section 1 Content</SwiftUI.Text>
+        </SwiftUI.CollapsibleSection>
+      </SwiftUI.List>
+    </SwiftUI.RootView>
+  );
 };
 
 export default App;

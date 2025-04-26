@@ -1,6 +1,6 @@
 import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
-import { SFSymbol } from "sf-symbols-typescript";
+import { SFSymbol } from "../types/sf-symbols";
 
 export interface ContentUnavailableViewProps extends SwiftUIViewProperties {
   title: string;
@@ -12,7 +12,7 @@ export interface ContentUnavailableViewProps extends SwiftUIViewProperties {
  * Displays a Swift UI ContentUnavailableView
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param title - The title
  * @param systemIconName - The symbol to display (SF symbol) [optional]

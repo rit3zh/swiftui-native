@@ -2,24 +2,31 @@ import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
 export interface ButtonProps extends SwiftUIViewProperties {
+  /** Unique identifier for the button component */
   key: string;
-
+  /** Content to be displayed inside the button */
   children: React.ReactNode;
-  onButtonPress?: () => any;
 }
 
 /**
- * Displays a Swift UI button
+ * A SwiftUI button component that can be used to trigger actions.
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This component must be used as a child of SwiftUI.RootView.
+ * The button can contain any valid React node as its content.
  *
- * @param key - The key under which the event is sent
- * @param children - The RNSwiftUI view that should be displayed as a button
+ * @example
+ * ```tsx
+ * <Button key="myButton">
+ *   <Text>Click me</Text>
+ * </Button>
+ * ```
+ *
+ * @param props - The button properties
+ * @param props.key - Unique identifier for the button component
+ * @param props.children - Content to be displayed inside the button
+ *
  * @extends SwiftUIViewProperties
- *
- *
- *
  */
 export const Button = (props: ButtonProps) => {
   return null;

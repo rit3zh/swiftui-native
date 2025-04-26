@@ -4,10 +4,10 @@ import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 export interface DividerProps extends SwiftUIViewProperties {}
 
 /**
- * Displays a Swift UI Divider
+ * Displays a Swift UI DividerSwiftUI
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @extends SwiftUIViewProperties
  *

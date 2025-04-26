@@ -11,7 +11,7 @@ export interface SectionProps extends SwiftUIViewProperties {
  * Displays a Swift UI List Section
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param optionalSubviews - The view to display as the section header
  * @param children - The views that should be displayed under this section

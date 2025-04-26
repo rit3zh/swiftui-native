@@ -1,129 +1,115 @@
 <p align="center">
-  <img src="./assets/swiftui-rn-logo.png" alt="App Mockup" width=300>
-
-<p align="center">
-  <a href="https://github.com/rit3zh/pinterest.js" target="_blank">
-    <img src="http://forthebadge.com/images/badges/built-with-love.svg" alt="Built With Love">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/rit3zh/pinterest.js" target="_blank">
-    <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintained">
-  </a>
-  <a href="https://github.com/rit3zh/pinterest.js" target="_blank">
-    <img src="https://img.shields.io/badge/License-Boost_1.0-lightblue.svg" alt="Boost License">
-  </a>
-  <a href="https://github.com/rit3zh/pinterest.js" target="_blank">
-    <img src="https://img.shields.io/badge/License-ISC-blue.svg" alt="ISC License">
-  </a>
-  <a href="https://github.com/rit3zh/pinterest.js" target="_blank">
-    <img src="https://badgen.net/github/release/rit3zh/Gladiator" alt="Release">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://www.buymeacoffee.com/rit3zh" target="_blank">
-    <img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me a Coffee">
-  </a>
+  <img src="./assets/mockup.png" alt="SwiftUI Native Logo" width="400px" />
+  <img src="./assets/swiftui-rn-logo.png" alt="SwiftUI Native Logo" width="300px" />
 </p>
 
 <div align="center">
 
-# Pinterest.js 📌
+<h1>SwiftUI Native</h1>
 
-[Pinterest.js]() is a versatile and efficient JavaScript library that allows you to get information from [Pinterest](https://pinterest.com).
+Native iOS components and interactions in React Native powered by SwiftUI and Expo Modules.
 
 </div>
 
-## Release Notes 📝
+<p align="center">
+  <img src="https://img.shields.io/badge/Made_with-React_Native-blue" alt="Made with React Native" />
+  <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintained? Yes" />
+  <img src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" alt="Runs with Expo" />
+</p>
 
-- **Added support for video search functionality.**
-- **Added `limit` option in the `searchPins` function.**
-- **Resolved all existing errors.**
-- **Added `getAutoCompletion` function that takes a query parameter.**
-- **Added `getComments` function that takes `IOptions` as a parameter.**
-- **Fixed the `video` property in the `getPin` function.**
-- **Added `visualSearch` function that takes `IOptions` as a parameter.**
-
-## Key Features 🚀
-
-- **Extremely fast 💡**
-- **Zero dependencies 📝**
-- **Lightweight 🎁**
-- **Built with 🤍**
-
-## Installation 🛠️
-
-To install Pinterest.js as an npm package, use the following command in your project directory:
-
-```bash
-npm install pinterest.js
-```
-
-## Usage 🧑‍💻
-
-To utilize Pinterest.js in your project, import the library into your JavaScript files as follows:
-
-```javascript
-const Pinterest = require("pinterest.js");
-```
-
-## Change Log 📜
-
-### [1.0.5] - 2024-07-06
-
-- Added support for video search functionality.
-- Added `limit` option in the `searchPins` function.
-- Resolved all existing errors.
-
-### [1.0.8] - 2024-07-10
-
-- Initial release of Pinterest.js with basic functionality to search and retrieve pins.
-
-### [1.0.11] - 2024-07-25
-
-- Added `getAutoCompletion` function that takes a query parameter.
-
-### [1.0.13] - 2024-08-06
-
-- Fixed the `video` property in the `getPin` function.
-
-### [1.0.16] - 2024-08-06
-
-- Added `getComments` function that takes `IOptions` as a parameter.
-- The old function `getPin` has been officially deprecated, though it is still usable as `getPinV3`.
-
-### [1.0.17] - 2024-12-05
-
-- Added `visualSearch` function that takes `IOptions` as a parameter.
-
-### [1.0.19] - 2025-2-08
-
-- Updated `getBoards` function.
-
-- Added `getBoardSection` function.
-
-- Added `getBoardSectionPins` function.
-
-### [1.0.20] - 2025-2-12
-
-- Added `getBoardPins` function & Fixed previous bugs.
-
-## Projects Using Pinterest.js 🌟
-
-Here are some amazing projects built using Pinterest.js:
-
-- [React Native Wallpaper App](https://github.com/rit3zh/react-native-wallpaper-app): A sleek and modern wallpaper app built with React Native, allowing users to explore and set beautiful wallpapers sourced from Pinterest.
-
-## Contribution 🤝
-
-We welcome contributions from the community. If you find any issues or have ideas for enhancements, feel free to open an issue or create a pull request on our [GitHub repository](https://github.com/TrishCX/Pinterest.js).
-
-## License 📜
-
-Pinterest.js is licensed under the [MIT License](https://github.com/TrishCX/Pinterest.js/blob/main/LICENSE), making it open and accessible for developers to use and modify in their projects.
+<p align="center">
+  <img src="http://forthebadge.com/images/badges/built-with-love.svg" alt="Built with love" width="120px" />
+</p>
 
 ---
 
-_Note: Replace 'rit3zh' and [LICENSE](https://github.com/TrishCX/Pinterest.js/blob/main/LICENSE) with your GitHub username and the link to the license file, respectively, when setting up your repository._
+> [!NOTE]
+> This library is a fork & modified version of [react-native-render-swift-ui](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://github.com/Pflaumenbaum/react-native-render-swift-ui&ved=2ahUKEwi7ovKztfSMAxW-FlkFHVYLGTMQFnoECBsQAQ&usg=AOvVaw2FdxXdPVWD8LF1q5M7knrC).
+
+### 📝 Overview
+
+**SwiftUI Native** brings the best of iOS native experiences directly into your React Native apps. With seamless SwiftUI integration via Expo Modules, you can now use:
+
+- 🚩 **Swipe actions** with full native fluidity
+- 📚 **Navigation stacks & modals**
+- ⚙️ **Custom native components**
+- ✨ **And more—without writing a single line of Swift** in your JS project.
+
+> [!WARNING]
+> This library uses **Expo Modules**. Make sure your project is configured with Expo Dev Client or Bare workflow.
+
+---
+
+### 📦 Features
+
+- ✅ Native iOS swipe actions
+- ⚙️ Configurable styles, icons & behaviors
+- ✨ SwiftUI power, no Swift required
+- 📱 Runs with Expo + React Native
+
+---
+
+### 🎥 Preview
+
+<p align="center">
+  <video
+    src="./assets/recording.mov"
+    autoplay
+    muted
+    loop
+    playsinline
+  ></video>
+</p>
+
+---
+
+### 📚 Get Started
+
+```bash
+yarn add swiftui-native
+```
+
+### 🚀 Prebuild & Run
+
+```bash
+# Prebuild your iOS native project
+npx expo prebuild -p ios
+
+# Launch on iOS simulator or device
+npx expo run:ios
+```
+
+### ⚙️ Update iOS Deployment Target
+
+If your Xcode project defaults to iOS 14.0, bump it in your `ios/Podfile`:
+
+```ruby
+platform :ios, podfile_properties['ios.deploymentTarget'] || '14.0'
+```
+
+> 🚨 **[!WARNING]:** Some components may require **iOS 16.0** or higher.
+
+### 🔗 Autolinking
+
+This package supports React Native’s [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md), so you don’t need to manually link anything—just install and you’re ready to go!
+
+---
+
+### 🤝 Contributing
+
+Love what you see? We’d be thrilled to have you contribute:
+
+- ✨ **Feature Requests & Bug Reports**
+  Open an issue on [GitHub Issues](https://github.com/rit3zh/swiftui-native/issues)
+
+- 💬 **Discussions & Feedback**
+  Join the conversation in [GitHub Discussions](https://github.com/rit3zh/swiftui-native/discussions)
+
+- 📦 **Pull Requests**
+  1. Fork the repo
+  2. Create a feature branch (`git checkout -b feature/my-feature`)
+  3. Commit your changes (`git commit -m "feat: add awesome component"`)
+  4. Push to the branch (`git push origin feature/my-feature`)
+  5. Open a PR and describe your changes
+
+All contributions—big or small—are welcome! Let’s build something amazing together. 🛠️🎉

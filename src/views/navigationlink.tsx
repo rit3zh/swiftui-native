@@ -11,7 +11,7 @@ export interface NavigationLinkProps extends SwiftUIViewProperties {
  * Displays a Swift UI NavigationLink
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param optionalSubviews - The label for the NavigationLink
  * @param children - The view that should displayed after click on the NavigationLink

@@ -1,7 +1,7 @@
 {
   "name": "swiftui-native",
   "version": "1.0.4",
-  "description": "An expo module that gives you the opportunity to use SwiftUI inside every react native app",
+  "description": "A complete SwiftUI component library for React Native, built with Expo and TypeScript. It allows you to use SwiftUI components in your React Native applications, providing a seamless integration between the two frameworks.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "homepage": "https://github.com/rit3zh/swiftui-native",
@@ -14,7 +14,11 @@
     "prepublishOnly": "expo-module prepublishOnly",
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
-    "open:android": "open -a \"Android Studio\" example/android"
+    "open:android": "open -a \"Android Studio\" example/android",
+    "release": "release-it",
+    "release:patch": "release-it patch",
+    "release:minor": "release-it minor",
+    "release:major": "release-it major"
   },
   "keywords": [
     "react-native",
@@ -29,8 +33,10 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
+    "@types/react-native": "^0.73.0",
     "expo-module-scripts": "^3.5.2",
     "expo-modules-core": "^1.12.14",
+    "release-it": "^19.0.1",
     "typedoc": "^0.28.2",
     "typedoc-plugin-markdown": "^4.6.2"
   },

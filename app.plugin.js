@@ -30,7 +30,9 @@ const withRNRenderSwiftUI = (config, { srcDir, noClean, dependencys } = {}) => {
           { stdio: "inherit" }
         );
         execSync(
-          `node ./node_modules/react-native-render-swift-ui/custom.js ${srcDir !== null && srcDir} ${noClean && "--no-clean"} `,
+          `node ./node_modules/react-native-render-swift-ui/custom.js ${
+            srcDir !== null && srcDir
+          } ${noClean && "--no-clean"} `,
           { stdio: "inherit" }
         );
         console.log(
@@ -58,7 +60,7 @@ const withRNRenderSwiftUI = (config, { srcDir, noClean, dependencys } = {}) => {
           1000
         );
       } catch (error) {
-        console.error("Error running rn-render-swift-ui preparation:", error);
+        console.error("Error running swiftui-native preparation:", error);
       }
       return config;
     },

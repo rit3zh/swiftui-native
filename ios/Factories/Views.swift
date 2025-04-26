@@ -69,13 +69,24 @@ struct ViewFactory: PresentableProtocol {
             let axis = Axis.Set.pick[axisKey] ?? .vertical
             let showsIndicators = material.properties?.showsIndicators ?? true
 
-            ScrollView(axis, showsIndicators: showsIndicators) {
+          let scroll = ScrollView(axis, showsIndicators: showsIndicators) {
                 AxisBasedStack(axis: axis) {
                     ForEach(subviews) { subview in
                         ViewFactory(material: subview, children: children, onEvent: onEvent).toPresentable()
                     }
                 }
             }
+            
+         
+            if #available(iOS 15.0, *) {
+                scroll.refreshable {
+                    onEvent(["onRefresh": [:]])
+                }
+            } else {
+                scroll
+            }
+            
+            
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for ScrollView")
         }
@@ -107,17 +118,14 @@ struct ViewFactory: PresentableProtocol {
             }
         }
     }
-
-
-    
-    
     
     // MARK: - List
 
     @ViewBuilder func list() -> some View {
         @State var editMode: EditMode = .inactive
         if let subviews = material.subviews {
-            List {
+            
+            let listview = List {
                 ForEach(Array(subviews.enumerated()), id: \.offset) { index, item in
                     if #available(iOS 15.0, *) {
                         ViewFactory(material: item, children: children, onEvent: onEvent)
@@ -141,8 +149,18 @@ struct ViewFactory: PresentableProtocol {
                     }
                 }.onMove(perform: material.enableEditing == true ? move : nil)
                 .onDelete(perform: material.enableEditing == true ? delete : nil)
+                
             }.environment(\.editMode, .constant(material.enableEditing == true ? .active : .inactive))
-            .modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
+                    .modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
+            
+            if #available(iOS 16.0, *) {
+                listview.refreshable {
+                    onEvent(["onRefresh": [:]])
+                }
+                
+            } else {
+                listview
+            }
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for List")
         }
@@ -322,6 +340,9 @@ struct ViewFactory: PresentableProtocol {
 
     @ViewBuilder
     func navigationView() -> some View {
+        
+            
+            
         if let subviews = material.subviews {
             @State var searchText: String = material.searchable?["initialText"] ?? ""
             @State var selectedScopeIndex: Int = 0
@@ -337,10 +358,13 @@ struct ViewFactory: PresentableProtocol {
                 if let searchable = material.searchable {
                     if #available(iOS 15.0, *) {
                         let placement = checkSearchPlacement(searchable["placement"])
-
+                        
+                        
                         if #available(iOS 16.0, *) {
-                            view
-                                .searchable(
+                                
+                                
+                            view.searchable(
+                                    
                                     text: Binding(
                                         get: { searchText },
                                         set: { newValue in
@@ -607,22 +631,33 @@ struct ViewFactory: PresentableProtocol {
 
     // MARK: - ContextMenu
 
-    @ViewBuilder func contextMenu() -> some View {
+    @ViewBuilder
+    func contextMenu() -> some View {
         if let subviews = material.subviews, let optionalSubviews = material.optionalSubviews {
             ForEach(Array(subviews.enumerated()), id: \.offset) { index, item in
-                ViewFactory(material: item, children: children, onEvent: onEvent, menuIndex: index).toPresentable()
-                    .contextMenu {
-                        ForEach(optionalSubviews) {
-                            ViewFactory(material: $0, children: children, onEvent: onEvent,menuIndex: index).toPresentable()
+                if #available(iOS 16.0, *) {
+                    ViewFactory(material: item, children: children, onEvent: onEvent, menuIndex: index).toPresentable()
+                        .contextMenu {
+                            ForEach(optionalSubviews) {
+                                ViewFactory(material: $0, children: children, onEvent: onEvent, menuIndex: index).toPresentable()
+                            }
+                        } preview: {
+                            if let previewMaterial = material.menuPreview {
+                                ForEach(previewMaterial) {
+                                    ViewFactory(material: $0, children: children, onEvent: onEvent, menuIndex: index).toPresentable()
+                                }
+                                
+                            }
                         }
-                    }
+                } else {
+                    ErrorMessage(message: "Context menu for only iOS 16")
+                }
             }
-
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView and an optional SubView for ContextMenu")
         }
     }
-
+    
     // MARK: - PopoverView
 
     @ViewBuilder func popoverView() -> some View {

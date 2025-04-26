@@ -6,7 +6,7 @@ export interface SpacerProps extends SwiftUIViewProperties {}
  * Displays a Swift UI Spacer
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @extends SwiftUIViewProperties
  *

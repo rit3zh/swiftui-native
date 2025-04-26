@@ -7,13 +7,11 @@ export interface NavigationSplitViewProps extends SwiftUIViewProperties {
   title?: string;
 }
 
-function getState() {}
-
 /**
  * Displays a Swift UI NavigationSplitView
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param optionalSubviews - The view that should be displayed as a split pane
  * @param children - The detail View

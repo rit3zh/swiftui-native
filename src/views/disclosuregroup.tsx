@@ -10,7 +10,7 @@ export interface DisclosureGroupProps extends SwiftUIViewProperties {
  * Displays a Swift UI ContextMenu
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param title - The title that should be displayed for the DisclosureGroup
  * @param children - The views to display in the DisclosureGroup

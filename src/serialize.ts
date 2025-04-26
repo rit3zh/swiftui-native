@@ -14,6 +14,7 @@ interface SerializedElement {
   optionalSubviews: SerializedElement[];
   leadingSwipeActions?: SerializedElement[];
   trailingSwipeActions?: SerializedElement[];
+  menuPreview?: SerializedElement[];
   scopes?: SerializedElement[];
   trailingSwipeActionFullSwipeEnable?: boolean;
   leadingSwipeActionFullSwipeEnable?: boolean;
@@ -38,6 +39,7 @@ interface SerializedElement {
   step?: number;
   tint?: string;
   searchable?: Searchable;
+  scrollDisable?: boolean;
 }
 
 const filterObjByKeysArray = (
@@ -68,6 +70,12 @@ const serializeReactElement = (
   const serializedOptionalSubViews =
     (props.optionalSubviews &&
       React.Children.toArray(props.optionalSubviews).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
+  const serializedMenuPreviewView =
+    (props.menuPreview &&
+      React.Children.toArray(props.menuPreview).map((child) =>
         serializeReactElement(child)
       )) ||
     [];
@@ -154,6 +162,7 @@ const serializeReactElement = (
       trailingSwipeActionFullSwipeEnable:
         props.trailingSwipeActionFullSwipeEnable,
       pickerStyle: props.pickerStyle,
+      menuPreview: serializedMenuPreviewView,
       isExpandable: props.isExpandable,
       enableEditing: props.enableEditing,
       minValue: props.minValue,
@@ -167,6 +176,7 @@ const serializeReactElement = (
       tint: props.tint,
       searchable: props.searchable,
       searchSuggestions: serializedSearchSuggestions,
+      scrollDisable: props.scrollDisable,
     };
   } else {
     return {
@@ -175,6 +185,7 @@ const serializeReactElement = (
       values: { ...filteredValues, key: key },
       subviews: serializedSubViews || [],
       optionalSubviews: serializedOptionalSubViews || [],
+      menuPreview: serializedMenuPreviewView,
       leadingSwipeActions: serializedOLeadingSwipeActions || [],
       trailingSwipeActions: serializedOtrailingSwipeActions || [],
       leadingSwipeActionFullSwipeEnable:
@@ -200,6 +211,7 @@ const serializeReactElement = (
       minimumValueLabel,
       tint: props.tint,
       searchable: props.searchable,
+      scrollDisable: props.scrollDisable,
     };
   }
 };

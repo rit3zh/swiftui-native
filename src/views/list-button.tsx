@@ -1,6 +1,6 @@
 import * as React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
-import { SFSymbol } from "sf-symbols-typescript";
+import { SFSymbol } from "../types/sf-symbols";
 
 export interface ButtonProps extends SwiftUIViewProperties {
   key?: string;
@@ -15,10 +15,10 @@ export interface ButtonProps extends SwiftUIViewProperties {
  * Displays a Swift UI button
  *
  * @remarks
- * This Compoent must be used as a child of RNSwiftUI.RootView.
+ * This Compoent must be used as a child of SwiftUI.RootView.
  *
  * @param key - The key under which the event is sent
- * @param children - The RNSwiftUI view that should be displayed as a button
+ * @param children - The SwiftUI view that should be displayed as a button
  * @extends SwiftUIViewProperties
  *
  *

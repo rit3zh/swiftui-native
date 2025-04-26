@@ -1,5 +1,5 @@
 import { ViewProps } from "react-native";
-import type { SFSymbol } from "sf-symbols-typescript";
+import type { SFSymbol } from "./types/sf-symbols/index";
 export type SwiftUiEvent = any;
 export interface ReactNativeRenderSwiftUiViewProps extends ViewProps {
   data: SwiftUiJson | string;

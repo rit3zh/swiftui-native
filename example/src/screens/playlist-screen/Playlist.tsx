@@ -1,4 +1,4 @@
-import { useWindowDimensions } from "react-native";
+import { useColorScheme, useWindowDimensions } from "react-native";
 import React from "react";
 import SwiftUI, {
   Color,
@@ -22,12 +22,16 @@ export const Playlist: React.FC = (): React.ReactNode => {
   useSwiftUiEvent("onScopeChange", (data) => {
     console.log(data);
   });
+
+  const colorScheme = useColorScheme();
+
   return (
     <SwiftUI.RootView>
       <SwiftUI.NavigationView
         searchSuggestions={[
           <SwiftUI.Label systemIconName="0.circle" text="HEY" />,
         ]}
+        searchable={{}}
         key={"onChangeText"}
         title={` ${constants.ALBUM_NAME}`}
         scopes={[<SwiftUI.Label systemIconName="person.fill" text="jhey" />]}
@@ -96,7 +100,7 @@ export const Playlist: React.FC = (): React.ReactNode => {
               />
             </SwiftUI.LazyHStack>
             <SwiftUI.HStack height={100}>
-              <SwiftUI.List>
+              <SwiftUI.List scrollDisable={false}>
                 <SwiftUI.HStack>
                   <SwiftUI.Spacer />
                   <SwiftUI.Image
@@ -140,7 +144,11 @@ export const Playlist: React.FC = (): React.ReactNode => {
               <SwiftUI.HStack verticalAlignment="bottom">
                 <SwiftUI.Text
                   font="subheadline"
-                  foregroundColor={SystemColor.SecondarySystemBackground}
+                  foregroundColor={
+                    colorScheme === "dark"
+                      ? SystemColor.SecondarySystemBackground
+                      : SystemColor.PlaceholderText
+                  }
                 >
                   {truncate(constants.ALBUM_DESCRIPTION, { length: 100 })}
                 </SwiftUI.Text>
@@ -161,12 +169,13 @@ export const Playlist: React.FC = (): React.ReactNode => {
           </SwiftUI.VStack>
 
           <SwiftUI.List
+            scrollDisable={false}
             trailingSwipeActionFullSwipeEnable={true}
             leadingSwipeActions={[
               <SwiftUI.ListButton
                 role="cancel"
                 systemIconName="text.line.first.and.arrowtriangle.forward"
-                text="Add to Library"
+                text="Play Next"
                 tint={"#6137de"}
               />,
             ]}
@@ -176,6 +185,12 @@ export const Playlist: React.FC = (): React.ReactNode => {
                 systemIconName="plus"
                 text="Add to Library"
                 tint={"#1a1a1a"}
+              />,
+              <SwiftUI.ListButton
+                role="cancel"
+                systemIconName="arrow.down"
+                text="Save"
+                tint={Color.Blue}
               />,
             ]}
             height={Math.min(constants.SONGS.length * 60, height - 200)}
@@ -193,39 +208,87 @@ export const Playlist: React.FC = (): React.ReactNode => {
               }
             >
               {ForEach(constants.SONGS, (song, index) => (
-                <SwiftUI.HStack key={index}>
-                  <SwiftUI.Text
-                    font="callout"
-                    foregroundColor={Color.Gray}
-                    fontWeight="medium"
-                    paddingRight={20}
-                  >
-                    {String(index + 1)}
-                  </SwiftUI.Text>
-
-                  <SwiftUI.Text font="subheadline">
-                    {song.featuredArtist
-                      ? `${song.title} (feat. ${song.featuredArtist})`
-                      : song.title}
-                  </SwiftUI.Text>
-                  {song.explicit ? (
-                    <SwiftUI.Image
-                      systemIconName="e.square.fill"
+                <SwiftUI.ContextMenu
+                  key={index}
+                  menuPreview={
+                    <SwiftUI.HStack>
+                      <SwiftUI.Image
+                        paddingLeft={10}
+                        imageUrl={constants.COVER_ART}
+                        width={100}
+                        height={100}
+                      />
+                      <SwiftUI.VStack
+                        horizontalAlignment="leading"
+                        paddingLeft={15}
+                        paddingRight={15}
+                        padding={5}
+                      >
+                        <SwiftUI.Text font="subheadline" fontWeight="bold">
+                          {song.featuredArtist
+                            ? `${song.title} (feat. ${song.featuredArtist})`
+                            : song.title}
+                        </SwiftUI.Text>
+                        <SwiftUI.Text font="caption">
+                          {constants.ARTIST_NAME}
+                        </SwiftUI.Text>
+                        <SwiftUI.Text font="caption">
+                          {constants.ALBUM_NAME +
+                            " • " +
+                            constants.RELEASE_DATE}
+                        </SwiftUI.Text>
+                      </SwiftUI.VStack>
+                    </SwiftUI.HStack>
+                  }
+                  optionalSubviews={[
+                    <SwiftUI.ListButton
+                      role="cancel"
+                      systemIconName="arrow.down"
+                      text="Save"
+                      tint={Color.Blue}
+                    />,
+                    <SwiftUI.ListButton
+                      role="cancel"
+                      systemIconName="plus"
+                      text="Add to Library"
+                      tint={"#1a1a1a"}
+                    />,
+                  ]}
+                >
+                  <SwiftUI.HStack key={index}>
+                    <SwiftUI.Text
+                      font="callout"
                       foregroundColor={Color.Gray}
-                      width={25}
-                      height={25}
-                      paddingLeft={10}
-                    />
-                  ) : null}
+                      fontWeight="medium"
+                      paddingRight={20}
+                    >
+                      {String(index + 1)}
+                    </SwiftUI.Text>
 
-                  <SwiftUI.Spacer />
-                  <SwiftUI.Image
-                    systemIconName="ellipsis"
-                    foregroundColor={Color.White}
-                    width={15}
-                    height={15}
-                  />
-                </SwiftUI.HStack>
+                    <SwiftUI.Text font="subheadline">
+                      {song.featuredArtist
+                        ? `${song.title} (feat. ${song.featuredArtist})`
+                        : song.title}
+                    </SwiftUI.Text>
+                    {song.explicit ? (
+                      <SwiftUI.Image
+                        systemIconName="e.square.fill"
+                        foregroundColor={Color.Gray}
+                        width={25}
+                        height={25}
+                        paddingLeft={10}
+                      />
+                    ) : null}
+
+                    <SwiftUI.Spacer />
+                    <SwiftUI.Image
+                      systemIconName="ellipsis"
+                      foregroundColor={Color.White}
+                      width={15}
+                      height={15}
+                    />
+                  </SwiftUI.HStack>
+                </SwiftUI.ContextMenu>
               ))}
             </SwiftUI.Section>
           </SwiftUI.List>

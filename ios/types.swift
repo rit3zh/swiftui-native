@@ -42,7 +42,7 @@ class ViewMaterial: Codable, Identifiable {
     var optionalSubviews: [ViewMaterial]?
     var leadingSwipeActions: [ViewMaterial]?
     var trailingSwipeActions: [ViewMaterial]?
-    
+    var menuPreview: [ViewMaterial]?
     var currentValueLabel: [ViewMaterial]?
     var minimumValueLabel: [ViewMaterial]?
     var maximumValueLabel:[ViewMaterial]?
@@ -63,9 +63,7 @@ class ViewMaterial: Codable, Identifiable {
     var step: Int?
     var gaugeStyle: String?
     var searchable: [String: String]?
-    
-
-    
+    var scrollDisable: Bool?
     
     
     enum CodingKeys: String, CodingKey {
@@ -89,6 +87,7 @@ class ViewMaterial: Codable, Identifiable {
         case minValue
         case value
         case currentValueLabel
+        case menuPreview
         case minimumValueLabel
         case maximumValueLabel
         case gaugeStyle
@@ -114,7 +113,6 @@ class ViewProperties: Codable {
     var height: Float?
     var destructive: Bool?
     var text: String?
-    
 
     var minLength: Float? // Spacer
     /// background color of the whole view
@@ -331,6 +329,20 @@ enum ViewType: String, Codable {
     case TextEditor
     case TextField
     case Toggle
-    
-    
+}
+
+
+@available(iOS 16.0, *)
+struct SearchToken: Identifiable, Hashable {
+    let id = UUID()
+    let key: String
+    let material: ViewMaterial
+
+    static func == (lhs: SearchToken, rhs: SearchToken) -> Bool {
+        lhs.key == rhs.key
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(key)
+    }
 }

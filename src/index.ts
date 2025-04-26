@@ -1,8 +1,9 @@
 // SwiftUI!
-import * as RNSwiftUI from "./views/index";
+import * as SwiftUI from "./views/index";
 
-export default RNSwiftUI;
-export { RNSwiftUI };
+export default SwiftUI;
+export { SwiftUI };
+export * from "./views/index";
 
 export * from "./enum";
 export * from "./hooks";

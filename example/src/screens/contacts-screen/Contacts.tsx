@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  useColorScheme,
-  Alert,
-  Image,
-} from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import SwiftUI, {
   useSwiftUiEvent,
   ForEach,
@@ -14,17 +6,24 @@ import SwiftUI, {
 } from "swiftui-native";
 import * as constants from "../../constants";
 import { groupContactsAlphabetically } from "../../utils/index";
+
 export const Contacts: React.FC = (): React.ReactNode & React.JSX.Element => {
   const groupedContacts = groupContactsAlphabetically(constants.contacts);
+  const [editingEnabled, setEditingEnabled] = useState<boolean>(false);
 
   useSwiftUiEvent(SwiftUIEvent.SwipeAction, (data: any) => {
     console.log(data);
   });
 
+  useSwiftUiEvent("onEditPress", (data: any) =>
+    setEditingEnabled(!editingEnabled)
+  );
+
   return (
     <SwiftUI.RootView>
       <SwiftUI.NavigationView title="Contacts">
         <SwiftUI.List
+          enableEditing={editingEnabled}
           listStyle="inset"
           trailingSwipeActionFullSwipeEnable
           trailingSwipeActions={[
@@ -32,7 +31,7 @@ export const Contacts: React.FC = (): React.ReactNode & React.JSX.Element => {
               systemIconName="trash"
               key={SwiftUIEvent.SwipeAction}
               role="destructive"
-              text=""
+              text="Trash"
             />,
           ]}
         >
@@ -44,13 +43,16 @@ export const Contacts: React.FC = (): React.ReactNode & React.JSX.Element => {
                 optionalSubviews={<SwiftUI.Text>{group}</SwiftUI.Text>}
               >
                 {ForEach(groupItems, (contact, idx) => (
-                  <SwiftUI.HStack key={idx}>
+                  <SwiftUI.HStack key={idx.toString()}>
                     <SwiftUI.Image
                       imageUrl={contact.image}
                       width={50}
                       height={50}
+                      cornerRadius={40}
                     />
-                    <SwiftUI.Text paddingLeft={10}>{contact.name}</SwiftUI.Text>
+                    <SwiftUI.Text paddingLeft={10} fontWeight="bold">
+                      {contact.name}
+                    </SwiftUI.Text>
                   </SwiftUI.HStack>
                 ))}
               </SwiftUI.Section>
