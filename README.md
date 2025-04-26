@@ -4,9 +4,7 @@
 </p>
 
 <div align="center">
-
 <h1>SwiftUI Native</h1>
-
 Native iOS components and interactions in React Native powered by SwiftUI and Expo Modules.
 
 </div>
@@ -49,20 +47,6 @@ Native iOS components and interactions in React Native powered by SwiftUI and Ex
 
 ---
 
-### 🎥 Preview
-
-<p align="center">
-  <video
-    src="./assets/recording.mov"
-    autoplay
-    muted
-    loop
-    playsinline
-  ></video>
-</p>
-
----
-
 ### 📚 Get Started
 
 ```bash
@@ -87,7 +71,8 @@ If your Xcode project defaults to iOS 14.0, bump it in your `ios/Podfile`:
 platform :ios, podfile_properties['ios.deploymentTarget'] || '14.0'
 ```
 
-> 🚨 **[!WARNING]:** Some components may require **iOS 16.0** or higher.
+> [!WARNING]
+> Some components may require **iOS 16.0** or higher.
 
 ### 🔗 Autolinking
 
