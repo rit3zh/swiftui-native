@@ -82,6 +82,17 @@ This package supports React Native’s [autolinking](https://github.com/react-na
 
 ---
 
+
+## Preview 🎬
+
+<video controls width="100%">
+  <source src="./assets/recording.mov" type="video/mp4" />
+  🛑 Whoops—your browser doesn’t support the video tag!
+</video>
+
+
+
+
 ### 🤝 Contributing
 
 Love what you see? We’d be thrilled to have you contribute:
