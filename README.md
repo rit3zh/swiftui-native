@@ -1,5 +1,7 @@
 <p align="center">
   <img src="./assets/mockup.png" alt="SwiftUI Native Logo" width="400px" />
+</p>
+<p align="center">
   <img src="./assets/swiftui-rn-logo.png" alt="SwiftUI Native Logo" width="300px" />
 </p>
 
