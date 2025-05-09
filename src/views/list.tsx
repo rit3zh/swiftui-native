@@ -16,6 +16,11 @@ export interface ListProps extends SwiftUIViewProperties {
   enableEditing?: boolean;
   /** Whether to disable scrolling for the list */
   scrollDisable?: boolean;
+
+  /**
+   * Array of components to display as a toolbar in the list.
+   */
+  renderListToolBar?: React.ReactNode[];
 }
 
 /**
@@ -52,6 +57,7 @@ export interface ListProps extends SwiftUIViewProperties {
  * @param props.trailingSwipeActionFullSwipeEnable - Whether to enable full swipe for trailing swipe actions
  * @param props.enableEditing - Whether to enable editing mode for the list
  * @param props.scrollDisable - Whether to disable scrolling for the list
+ * @param props.renderListToolBar - Array of components to display as a toolbar in the list
  *
  * @extends SwiftUIViewProperties
  */

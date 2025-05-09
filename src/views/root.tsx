@@ -50,7 +50,6 @@ export const RootView = (props: RootViewProps) => {
   return (
     <RNSwiftUIJsonView
       onEvent={({ nativeEvent }) => handleSwiftUiEvent(nativeEvent)}
-      //   onEvent={props.onSwiftUIEvent}
       style={{ ...props.style, flex: 1 }}
       data={data}
     >

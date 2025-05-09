@@ -42,6 +42,7 @@ class ViewMaterial: Codable, Identifiable {
     var optionalSubviews: [ViewMaterial]?
     var leadingSwipeActions: [ViewMaterial]?
     var trailingSwipeActions: [ViewMaterial]?
+    var renderListToolBar: [ViewMaterial]?
     var menuPreview: [ViewMaterial]?
     var currentValueLabel: [ViewMaterial]?
     var minimumValueLabel: [ViewMaterial]?
@@ -74,6 +75,7 @@ class ViewMaterial: Codable, Identifiable {
         case optionalSubviews
         case leadingSwipeActions
         case trailingSwipeActions
+        case renderListToolBar
         case leadingSwipeActionFullSwipeEnable
         case trailingSwipeActionFullSwipeEnable
         case role
@@ -329,6 +331,8 @@ enum ViewType: String, Codable {
     case TextEditor
     case TextField
     case Toggle
+    case ToolBarItem
+    case EditButton
 }
 
 

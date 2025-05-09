@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./assets/mockup.png" alt="SwiftUI Native Logo" width="400px" />
+  <img src="https://raw.githubusercontent.com/rit3zh/swiftui-native/refs/heads/main/assets/mockup.png" alt="SwiftUI Native Logo" width="400px" />
 </p>
 <p align="center">
-  <img src="./assets/swiftui-rn-logo.png" alt="SwiftUI Native Logo" width="300px" />
+  <img src="https://github.com/rit3zh/swiftui-native/blob/main/assets/swiftui-rn-logo.png?raw=true" alt="SwiftUI Native Logo" width="300px" />
 </p>
 
 <div align="center">
@@ -82,16 +82,17 @@ This package supports React Native’s [autolinking](https://github.com/react-na
 
 ---
 
-
 ## Preview 🎬
 
 <video controls width="100%">
-  <source src="./assets/recording.mov" type="video/mp4" />
+  <source src="./assets/recording.mp4" type="video/mp4" />
   🛑 Whoops—your browser doesn’t support the video tag!
 </video>
 
+### 📝 **Changes**
 
-
+- ✅ Fixed `enableEditing` error
+- ➕ Added `ToolBarItem` component
 
 ### 🤝 Contributing
 

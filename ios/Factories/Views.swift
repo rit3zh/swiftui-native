@@ -5,7 +5,7 @@ import SwiftUI
 struct ViewFactory: PresentableProtocol {
     private let material: ViewMaterial
     private let children: [UIView]?
-    
+
 
     private let onEvent: EventDispatcher
     private var index: Int? = nil
@@ -19,16 +19,16 @@ struct ViewFactory: PresentableProtocol {
         self.context = context
         self.menuIndex = menuIndex
     }
-    
 
-    
-    
+
+
+
     // MARK: - Guage
     @ViewBuilder
     func gauge() -> some View {
         if let subviews = material.subviews {
             if #available(iOS 16.0, *) {
-                
+
                 let value = Double(material.value ?? 0)
                 let minValue = Double(material.minValue ?? 0)
                 let maxValue = Double(material.maxValue ?? 100)
@@ -61,6 +61,9 @@ struct ViewFactory: PresentableProtocol {
 
     
     
+    
+
+
     // MARK: - ScrollView
 
     @ViewBuilder func scrollView() -> some View {
@@ -76,8 +79,8 @@ struct ViewFactory: PresentableProtocol {
                     }
                 }
             }
-            
-         
+
+
             if #available(iOS 15.0, *) {
                 scroll.refreshable {
                     onEvent(["onRefresh": [:]])
@@ -85,22 +88,48 @@ struct ViewFactory: PresentableProtocol {
             } else {
                 scroll
             }
-            
-            
+
+
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for ScrollView")
         }
     }
 
+
     
+    // MARK: - EditButton
+
+
+    @ViewBuilder
+    func editButton() -> some View {
+        
+        @State var editMode: EditMode = .inactive
+
+        if #available(iOS 15.0, *) {
+        
+            EditButton()
+                .tint(material.tint.toColor())
+                .environment(\.editMode, $editMode)
+                .onChange(of: editMode) { newValue in
+                    onEvent([
+                        ".$onEditToggle": [
+                            "isEditing": newValue == .active
+                        ]
+                    ])
+                }
+        } else {
+            EmptyView()
+        }
+    }
+
     // MARK: - ListButton
 
-        
+
     @ViewBuilder
     func listbutton() -> some View {
         let foregroundColor = Color(hex: material.properties?.foregroundColor ?? "#FFFFFF")
         if #available(iOS 15.0, *) {
-            
+
             if let title = material.values?.text {
                 Button(role: checkButtonRole(material.role)) {
                     onEvent([".$onListButtonPress": ["index": index as Any, "title": title]])
@@ -112,25 +141,24 @@ struct ViewFactory: PresentableProtocol {
             if #available(iOS 16.0, *) {
                 Button(material.properties?.text ?? "") {
                     onEvent(["onListButtonPress": ["index": index as Any, "title": material.values?.text as Any]])
-                    
-                    
                 }
             }
         }
     }
-    
-    // MARK: - List
 
-    @ViewBuilder func list() -> some View {
-        @State var editMode: EditMode = .inactive
+    // MARK: - List
+    
+    @ViewBuilder
+    func list() -> some View {
         if let subviews = material.subviews {
-            
-            let listview = List {
+            let editModeValue: EditMode = (material.enableEditing == true) ? .active : .inactive
+
+            let listView = List {
                 ForEach(Array(subviews.enumerated()), id: \.offset) { index, item in
                     if #available(iOS 15.0, *) {
                         ViewFactory(material: item, children: children, onEvent: onEvent)
                             .toPresentable()
-                            .swipeActions(edge: .leading, allowsFullSwipe: material.leadingSwipeActionFullSwipeEnable ?? true ) {
+                            .swipeActions(edge: .leading, allowsFullSwipe: material.leadingSwipeActionFullSwipeEnable ?? true) {
                                 if let leadingSwipeActions = material.leadingSwipeActions {
                                     ForEach(leadingSwipeActions) { swipeItem in
                                         ViewFactory(material: swipeItem, children: children, onEvent: onEvent, index: index)
@@ -147,24 +175,34 @@ struct ViewFactory: PresentableProtocol {
                                 }
                             }
                     }
-                }.onMove(perform: material.enableEditing == true ? move : nil)
+                }
                 .onDelete(perform: material.enableEditing == true ? delete : nil)
-                
-            }.environment(\.editMode, .constant(material.enableEditing == true ? .active : .inactive))
-                    .modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
+                .onMove(perform: material.enableEditing == true ? move : nil)
+            }.environment(\.editMode, .constant(editModeValue))
+            .animation(.default, value: material.enableEditing)
+            .toolbar {
+                if let toolBarRender = material.renderListToolBar {
+                    ForEach(toolBarRender) { item in
+                        ViewFactory(material: item, children: children, onEvent: onEvent)
+                            .toPresentable()
+                    }
+                }
+            }
+            .modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
             
             if #available(iOS 16.0, *) {
-                listview.refreshable {
+                listView.refreshable {
                     onEvent(["onRefresh": [:]])
                 }
-                
             } else {
-                listview
+                listView
             }
+
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for List")
         }
     }
+
 
 
 
@@ -212,7 +250,7 @@ struct ViewFactory: PresentableProtocol {
     // MARK: - VStack
 
     @ViewBuilder func vstack() -> some View {
-        
+
         if let subviews = material.subviews {
             let spacing = material.properties?.spacing.toCGFloat() ?? 0
             let horizontalAlignmentKey = material.properties?.horizontalAlignment ?? "center"
@@ -257,8 +295,10 @@ struct ViewFactory: PresentableProtocol {
                 let isExpanded: Binding<Bool> = Binding(
                     get: { material.isExpandable ?? true },
                     set: { newValue in
+                        withAnimation {
                         material.isExpandable = newValue
                         onEvent([material.values?.key ?? "expandable": ["isExpanded": newValue]])
+                        }
                     }
                 )
 
@@ -340,9 +380,9 @@ struct ViewFactory: PresentableProtocol {
 
     @ViewBuilder
     func navigationView() -> some View {
-        
-            
-            
+
+
+
         if let subviews = material.subviews {
             @State var searchText: String = material.searchable?["initialText"] ?? ""
             @State var selectedScopeIndex: Int = 0
@@ -353,18 +393,18 @@ struct ViewFactory: PresentableProtocol {
                 }
                 .navigationTitle(material.values?.title ?? "")
                 .navigationViewStyle(.stack)
-                
+
 
                 if let searchable = material.searchable {
                     if #available(iOS 15.0, *) {
                         let placement = checkSearchPlacement(searchable["placement"])
-                        
-                        
+
+
                         if #available(iOS 16.0, *) {
-                                
-                                
+
+
                             view.searchable(
-                                    
+
                                     text: Binding(
                                         get: { searchText },
                                         set: { newValue in
@@ -382,7 +422,7 @@ struct ViewFactory: PresentableProtocol {
                                         "submittedText": searchText
                                     ]])
                                 }
-                                
+
                                 .searchScopes(Binding(
                                     get: { selectedScopeIndex },
                                     set: { newIndex in
@@ -407,7 +447,7 @@ struct ViewFactory: PresentableProtocol {
                                         }
                                     }
                                 }
-                                
+
                         } else {
                             // Fallback on earlier versions
                         }
@@ -444,7 +484,7 @@ struct ViewFactory: PresentableProtocol {
                 .font(font)
                 .fontWeight(fontWeight)
         }
-      
+
     }
 
     // MARK: - Label
@@ -453,7 +493,7 @@ struct ViewFactory: PresentableProtocol {
         let fontHashValue = material.properties?.font ?? "body"
         let font = Font.pick[fontHashValue]
         let fontWeightHashValue = material.properties?.fontWeight ?? "regular"
-        
+
         let fontWeight = Font.Weight.pick[fontWeightHashValue]
         Label(material.values?.text ?? "", systemImage: material.values?.systemIconName ?? "")
             .font(font)
@@ -525,8 +565,8 @@ struct ViewFactory: PresentableProtocol {
         }
     }
 
-    
-    
+
+
     // MARK: - DisclosureGroup
 
     @ViewBuilder func disclosureGroup() -> some View {
@@ -546,9 +586,9 @@ struct ViewFactory: PresentableProtocol {
 
     @ViewBuilder func button() -> some View {
         if let subviews = material.subviews {
-            
-            
-            
+
+
+
             Button {
                 onEvent([material.values?.key ?? "Button": ["action": "press", "index": menuIndex as Any]])
             }
@@ -582,6 +622,31 @@ struct ViewFactory: PresentableProtocol {
 
         } else {
             ErrorMessage(message: "Make sure you have defined a SubView for ToolbarItemGroup")
+        }
+    }
+    
+    
+    
+    
+    // MARK: - toolBarItem
+
+    @ViewBuilder func toolBarItem() -> some View {
+        let placementHashValue = material.properties?.toolbarPlacement ?? "automatic"
+        let placement = ToolbarItemPlacement.pick[placementHashValue] ?? .automatic
+
+        if let subviews = material.subviews {
+            VStack {}
+
+                .toolbar {
+                    ToolbarItem(placement: placement) {
+                        ForEach(subviews) {
+                            ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                        }
+                    }
+                }
+
+        } else {
+            ErrorMessage(message: "Make sure you have defined a SubView for ToolbarItem")
         }
     }
 
@@ -646,7 +711,7 @@ struct ViewFactory: PresentableProtocol {
                                 ForEach(previewMaterial) {
                                     ViewFactory(material: $0, children: children, onEvent: onEvent, menuIndex: index).toPresentable()
                                 }
-                                
+
                             }
                         }
                 } else {
@@ -657,7 +722,7 @@ struct ViewFactory: PresentableProtocol {
             ErrorMessage(message: "Make sure you have defined a SubView and an optional SubView for ContextMenu")
         }
     }
-    
+
     // MARK: - PopoverView
 
     @ViewBuilder func popoverView() -> some View {
@@ -763,8 +828,8 @@ struct ViewFactory: PresentableProtocol {
     // MARK: - CustomView
 
     @ViewBuilder func customView() -> some View {
-   
-        
+
+
         if let key = material.values?.key {
             CustomView(viewKey: key , material: material, onEvent: onEvent)
         }
@@ -772,10 +837,10 @@ struct ViewFactory: PresentableProtocol {
             ErrorMessage(message: "Please specify a native view key for the CustomView")
         }
     }
-    
-    
+
+
     // MARK: - Picker
-    
+
     @ViewBuilder  func picker() -> some View {
         if let subviews = material.subviews {
             let selection = Binding<Int>(
@@ -802,12 +867,12 @@ struct ViewFactory: PresentableProtocol {
                     }
                 }.applyPickerStyle(material.pickerStyle)
             }
-            
+
         }
     }
-    
-    
-    
+
+
+
     @ViewBuilder
     func form() -> some View {
         if let subviews = material.subviews {
@@ -829,8 +894,8 @@ struct ViewFactory: PresentableProtocol {
             ErrorMessage(message: "Make sure you have defined subviews for Form")
         }
     }
-    
-    
+
+
     @ViewBuilder
     func texteditor () -> some View{
         let key = material.values?.key ?? "textEditor"
@@ -838,7 +903,7 @@ struct ViewFactory: PresentableProtocol {
         let lineSpacing = material.values?.lineSpacing ?? 2
         let lineLimit = material.values?.lineLimit ?? 100
         @State var text: String = initialText
-        
+
         if #available(iOS 17.0, *) {
             TextEditor(text: Binding(
                 get: { text },
@@ -861,10 +926,10 @@ struct ViewFactory: PresentableProtocol {
             )).lineSpacing(CGFloat(lineSpacing))
                 .lineLimit(lineLimit)
         }
-            
+
     }
-    
-    
+
+
     @ViewBuilder
     func textfield () -> some View{
         let key = material.values?.key ?? "textFieldChange"
@@ -872,8 +937,8 @@ struct ViewFactory: PresentableProtocol {
         let placeholder = material.values?.placeholder ?? ""
         let textFieldStyle = material.values?.textFieldStyle
         @State var text: String = initialText
-       
-        
+
+
         TextField(placeholder, text: Binding(
             get: { text },
             set: { newText in
@@ -881,11 +946,11 @@ struct ViewFactory: PresentableProtocol {
                 material.values?.text = newText
                 onEvent([key: ["text": newText]])
             })).applyTextFieldStyle(textFieldStyle)
-        
-        
-            
+
+
+
     }
-    
+
     @ViewBuilder
     func toggle() -> some View {
         let key = material.values?.key ?? "toggle"
@@ -915,7 +980,7 @@ struct ViewFactory: PresentableProtocol {
         }
     }
 
-    
+
     @ViewBuilder
     func colorpicker() -> some View {
         if #available(iOS 14.0, *) {
@@ -938,14 +1003,14 @@ struct ViewFactory: PresentableProtocol {
         }
     }
 
-    
-    
-    
+
+
+
     @ViewBuilder
     func datepicker() -> some View {
         if #available(iOS 14.0, *) {
             let formatter = ISO8601DateFormatter()
-            
+
             let key = material.values?.key ?? "datePicker"
 
             let selectedDate = formatter.date(from: material.values?.date ?? "") ?? Date()
@@ -1007,8 +1072,8 @@ struct ViewFactory: PresentableProtocol {
             value: binding, in: minValue...maxValue, step: step)
     }
 
-    
-        
+
+
     @ViewBuilder
     func meshgradient() -> some View {
       if #available(iOS 18.0, *) {
@@ -1065,7 +1130,7 @@ struct ViewFactory: PresentableProtocol {
 
 
     // MARK: - ActionSymbol
-    
+
     @ViewBuilder
     func actionsymbol() -> some View {
       if let systemName = material.values?.systemIconName {
@@ -1077,11 +1142,11 @@ struct ViewFactory: PresentableProtocol {
         let height = CGFloat(material.properties?.backgroundHeight ?? 44)
           let actionBackgroundColor = Color(hex: material.properties?.actionBackgroundColor ?? "#FFFFFF")
         let fontWeight = Font.Weight.pick[iconWeightKey] ?? .regular
-          
+
           if #available(iOS 15.0, *) {
               Image(systemName: systemName)
                   .font(.system(size: iconSize, weight: fontWeight))
-              
+
                   .frame(width: width, height: height)
                   .background(
                     RoundedRectangle(cornerRadius: cornerRadius).foregroundStyle(actionBackgroundColor)
@@ -1093,12 +1158,12 @@ struct ViewFactory: PresentableProtocol {
         ErrorMessage(message: "Missing systemIconName for ActionSymbol")
       }
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 
     @ViewBuilder func buildDefault() -> some View {
         switch material.type {
@@ -1145,7 +1210,9 @@ struct ViewFactory: PresentableProtocol {
         case .Toggle: toggle()
         case .TextEditor: texteditor()
         case .TextField: textfield()
-            
+        case .ToolBarItem: toolBarItem()
+        case .EditButton: editButton()
+
         default: EmptyView()
         }
     }
@@ -1155,8 +1222,8 @@ struct ViewFactory: PresentableProtocol {
         let actionKey = material.values?.key ?? "onTapGesture"
 
         let uiComponent = buildDefault().embedInAnyView()
-        
-        
+
+
         uiComponent
             .modifier(ModifierFactory.PaddingModifier(padding: prop?.padding.toCGFloat()))
             .modifier(ModifierFactory.PaddingLeftModifier(padding: prop?.paddingLeft.toCGFloat()))
@@ -1168,7 +1235,7 @@ struct ViewFactory: PresentableProtocol {
                 borderColor: prop?.borderColor.toColor(),
                 borderWidth: prop?.borderWidth.toCGFloat()
             ))
-        
+
             .modifier(ModifierFactory.FrameModifier(
                 width: prop?.width.toCGFloat(),
                 height: prop?.height.toCGFloat()
@@ -1181,7 +1248,7 @@ struct ViewFactory: PresentableProtocol {
                 tint: prop?.tint.toColor()
 
             ))
-            
+
             .modifier(ModifierFactory.ColorOverlayModifer(
                 color: prop?.overlayColor.toColor()
 
@@ -1198,7 +1265,7 @@ struct ViewFactory: PresentableProtocol {
                 hidden: prop?.navigationBarHidden ?? false
 
             ))
-            
+
             .modifier(ModifierFactory.IgnoreSafeAreaModifer(
                 ignore: prop?.ignoreSafeArea ?? false
 
@@ -1220,12 +1287,12 @@ struct ViewFactory: PresentableProtocol {
 
             ))
             .modifier(ModifierFactory.MultilineTextAlignment(alignment: prop?.multilineTextAlignment))
-    
-    }
-    
-    
 
-    
+    }
+
+
+
+
     func move(from source: IndexSet, to destination: Int) {
            let indices = Array(source)
 
@@ -1236,9 +1303,9 @@ struct ViewFactory: PresentableProtocol {
            let indices = Array(offsets)
            onEvent(["onDelete": ["indices": indices]])
        }
-    
-    
-    
+
+
+
 
 }
 

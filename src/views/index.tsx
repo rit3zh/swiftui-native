@@ -1,4 +1,5 @@
 import List from "./list";
+import ToolBarItem from "./toolbaritem";
 import DatePicker from "./datepicker";
 import ActionSymbol from "./actionsymbol";
 import Picker from "./picker";
@@ -8,6 +9,7 @@ import Circle from "./circle";
 import TextField from "./textfield";
 import ContentUnavailableView from "./contentunavailableview";
 import ListButton from "./list-button";
+import EditButton from "./editbutton";
 import ContextMenu from "./contextmenu";
 import MeshGradient from "./meshgradient";
 import Stepper from "./stepper";
@@ -67,6 +69,7 @@ export {
   Spacer,
   Text,
   ToolbarItemGroup,
+  ToolBarItem,
   VStack,
   ZStack,
   ListButton,
@@ -88,4 +91,5 @@ export {
   TextEditor,
   Toggle,
   TextField,
+  EditButton,
 };

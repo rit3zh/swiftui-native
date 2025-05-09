@@ -56,7 +56,7 @@ type ListStyle =
   | "insetGrouped"
   | "grouped"
   | "sidebar"
-  | "palin";
+  | "plain";
 
 type HoverEffect = "automatic" | "highlight" | "lift";
 

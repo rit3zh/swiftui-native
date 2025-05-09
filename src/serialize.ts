@@ -14,6 +14,7 @@ interface SerializedElement {
   optionalSubviews: SerializedElement[];
   leadingSwipeActions?: SerializedElement[];
   trailingSwipeActions?: SerializedElement[];
+  renderListToolBar?: SerializedElement[];
   menuPreview?: SerializedElement[];
   scopes?: SerializedElement[];
   trailingSwipeActionFullSwipeEnable?: boolean;
@@ -125,6 +126,12 @@ const serializeReactElement = (
         serializeReactElement(child)
       )) ||
     [];
+  const serializeToolBarRenderer =
+    (props.renderListToolBar &&
+      React.Children.toArray(props.renderListToolBar).map((child) =>
+        serializeReactElement(child)
+      )) ||
+    [];
   const serializedSubViews =
     (props.children &&
       React.Children.toArray(props.children).map((child) =>
@@ -168,6 +175,7 @@ const serializeReactElement = (
       minValue: props.minValue,
       maxValue: props.maxValue,
       value: props.value,
+      renderListToolBar: serializeToolBarRenderer,
       currentValueLabel,
       maximumValueLabel,
       minimumValueLabel,
@@ -188,6 +196,7 @@ const serializeReactElement = (
       menuPreview: serializedMenuPreviewView,
       leadingSwipeActions: serializedOLeadingSwipeActions || [],
       trailingSwipeActions: serializedOtrailingSwipeActions || [],
+      renderListToolBar: serializeToolBarRenderer || [],
       leadingSwipeActionFullSwipeEnable:
         props.leadingSwipeActionFullSwipeEnable,
       trailingSwipeActionFullSwipeEnable:
