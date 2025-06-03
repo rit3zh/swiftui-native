@@ -4,52 +4,53 @@ extension View {
     func embedInAnyView() -> AnyView {
         AnyView(self)
     }
-        
-        @ViewBuilder
+    
+    @ViewBuilder
     func applyIf<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-          if condition {
-              transform(self)
-          } else {
-              self
-          }
-      }
-    
-
-    
-        @ViewBuilder
-        func applyPickerStyle(_ style: String?) -> some View {
-            if #available(iOS 14.0, *) {
-                switch style?.lowercased() {
-                case "segmented":
-                    self.pickerStyle(SegmentedPickerStyle())
-                case "menu":
-                    self.pickerStyle(MenuPickerStyle())
-                case "wheel":
-                    self.pickerStyle(WheelPickerStyle())
-                case "inline":
-                    self.pickerStyle(InlinePickerStyle())
-                default:
-                    self.pickerStyle(DefaultPickerStyle())
-                }
-            } else {
-                self
-            }
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
     }
     
-        @available(iOS 16.0, *)
-        @ViewBuilder
-        func applyFormStyle(_ style: String?) -> some View {
+    
+    
+    @ViewBuilder
+    func applyPickerStyle(_ style: String?) -> some View {
+        if #available(iOS 14.0, *) {
             switch style?.lowercased() {
-            case "columns":
-                self.formStyle(.columns)
-            case "grouped":
-                self.formStyle(.grouped)
-            case "automatic":
-                self.formStyle(.automatic)
+            case "segmented":
+                self.pickerStyle(SegmentedPickerStyle())
+            case "menu":
+                self.pickerStyle(MenuPickerStyle())
+            case "wheel":
+                self.pickerStyle(WheelPickerStyle())
+            case "inline":
+                self.pickerStyle(InlinePickerStyle())
             default:
-                self.formStyle(.grouped)
+                self.pickerStyle(DefaultPickerStyle())
             }
+        } else {
+            self
         }
+    }
+    
+    
+    @available(iOS 16.0, *)
+    @ViewBuilder
+    func applyFormStyle(_ style: String?) -> some View {
+        switch style?.lowercased() {
+        case "columns":
+            self.formStyle(.columns)
+        case "grouped":
+            self.formStyle(.grouped)
+        case "automatic":
+            self.formStyle(.automatic)
+        default:
+            self.formStyle(.grouped)
+        }
+    }
     
     @ViewBuilder
     func applyToggleStyle(_ style: String?) -> some View {
@@ -68,8 +69,8 @@ extension View {
             self.toggleStyle(.automatic)
         }
     }
-
-
+    
+    
     @available(iOS 17.0, *)
     @ViewBuilder
     func applyTextEdtorStyle(_ style: String?) -> some View {
@@ -84,7 +85,7 @@ extension View {
     }
     
     
-//    @available(iOS 17.0, *)
+    //    @available(iOS 17.0, *)
     @ViewBuilder
     func applyTextFieldStyle(_ style: String?) -> some View {
         switch style {
@@ -114,30 +115,114 @@ extension View {
         }
     }
     
-
+    
     @ViewBuilder
     @available(iOS 16.0, *)
     func applyGaugeStyle(_ style: String?) -> some View {
         
-            switch style {
-            case "accessoryCircular":
-                self.gaugeStyle(.accessoryCircular)
-            case "accessoryLinear":
-                self.gaugeStyle(.accessoryLinear)
-            case "linearCapacity":
-                self.gaugeStyle(.linearCapacity)
-            case "accessoryLinearCapacity":
-                self.gaugeStyle(.accessoryLinearCapacity)
-            case "accessoryCircularCapacity":
-                self.gaugeStyle(.accessoryCircularCapacity)
-            default:
-                self.gaugeStyle(.automatic)
-            }
+        switch style {
+        case "accessoryCircular":
+            self.gaugeStyle(.accessoryCircular)
+        case "accessoryLinear":
+            self.gaugeStyle(.accessoryLinear)
+        case "linearCapacity":
+            self.gaugeStyle(.linearCapacity)
+        case "accessoryLinearCapacity":
+            self.gaugeStyle(.accessoryLinearCapacity)
+        case "accessoryCircularCapacity":
+            self.gaugeStyle(.accessoryCircularCapacity)
+        default:
+            self.gaugeStyle(.automatic)
+        }
     }
-
-
+    
+    
+    
+    
+    @available(iOS 17.0, *)
+    
+    @ViewBuilder
+    func applySymbolEffectStyle(_ style: String?, value: EquatableAnyValue) -> some View {
+        switch style {
+        case "pulse":
+            self.symbolEffect(.pulse, value: value)
+        case "bounce":
+            self.symbolEffect(.bounce, value: value)
+        case "bounceInDown":
+            self.symbolEffect(.bounce.down, value: value)
+        case "bounceInUp":
+            self.symbolEffect(.bounce.up.down, value: value)
+        case "bounceByLayer":
+            self.symbolEffect(.bounce.byLayer, value: value)
+        case "appear":
+            self.symbolEffect(.appear)
+        case "appearInUp":
+            self.symbolEffect(.appear.up)
+        case "appearInDown":
+            self.symbolEffect(.appear.down)
+        case "appearByLayer":
+            self.symbolEffect(.appear.byLayer)
+        case "disappear":
+            self.symbolEffect(.disappear)
+        case "disappearInUp":
+            self.symbolEffect(.disappear.up)
+        case "disappearInDown":
+            self.symbolEffect(.disappear.down)
+        case "disappearByLayer":
+            self.symbolEffect(.disappear.byLayer)
+        case "variablecolor":
+            self.symbolEffect(.variableColor)
+        case "variablecolorCumulative":
+            self.symbolEffect(.variableColor.cumulative)
+        case "variablecolorDimInactiveLayers":
+            self.symbolEffect(.variableColor.dimInactiveLayers)
+        case "variablecolorHideInactiveLayers":
+            self.symbolEffect(.variableColor.hideInactiveLayers)
+        case "variablecolorReversing":
+            self.symbolEffect(.variableColor.reversing)
+        case "variablecolorNonReversing":
+            self.symbolEffect(.variableColor.nonReversing)
+        case "variablecolorIterative":
+            self.symbolEffect(.variableColor.iterative)
+        case "rotate":
+            if #available(iOS 18.0, *) {
+                self.symbolEffect(.rotate)
+            } else {
+                self.symbolEffect(.pulse, value: value)
+            }
+        case "rotateByLayer":
+            if #available(iOS 18.0, *) {
+                self.symbolEffect(.rotate.byLayer)
+            } else {
+                self.symbolEffect(.pulse, value: value)
+            }
+        case "rotateClockwise":
+            if #available(iOS 18.0, *) {
+                self.symbolEffect(.rotate.clockwise)
+            } else {
+                self.symbolEffect(.pulse, value: value)
+            }
+        case "rotateCounterClockwise":
+            if #available(iOS 18.0, *) {
+                self.symbolEffect(.rotate.counterClockwise)
+            } else {
+                self.symbolEffect(.pulse, value: value)
+            }
+        default:
+            self.symbolEffect(.pulse, value: value)
+        }
+    }
 }
+    
 
+
+struct EquatableAnyValue: Equatable {
+    let base: Any?
+
+    static func == (lhs: EquatableAnyValue, rhs: EquatableAnyValue) -> Bool {
+        String(describing: lhs.base) == String(describing: rhs.base)
+    }
+}
 
 
 enum AnyValue: Codable {

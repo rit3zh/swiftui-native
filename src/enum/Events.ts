@@ -7,4 +7,5 @@ export enum SwiftUIEvent {
   SubmitText = "onSubmitText",
   OnMove = "onMove",
   OnDelete = "onDelete",
+  OnPress = "onPress",
 }

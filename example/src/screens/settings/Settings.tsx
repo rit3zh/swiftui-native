@@ -1,6 +1,6 @@
 import { AccessibilityActionEvent } from "react-native";
 import React from "react";
-import SwiftUI, { Color, ForEach, RNSwiftUI } from "swiftui-native";
+import SwiftUI, { Color, ForEach } from "swiftui-native";
 import * as constants from "../../constants";
 
 export const Settings: React.FC = (): React.ReactNode => {

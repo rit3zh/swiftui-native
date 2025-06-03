@@ -60,7 +60,7 @@ export const SwiftUIViewValueKeys = [
   "maxDate",
   "datePickerStyle",
   "labelHidden",
-
+  "scrollDisable",
   "formStyle",
   "lineSpacing",
   "lineLimit",

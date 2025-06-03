@@ -65,7 +65,8 @@ class ViewMaterial: Codable, Identifiable {
     var gaugeStyle: String?
     var searchable: [String: String]?
     var scrollDisable: Bool?
-    
+    var symbolEffectName: String?
+    var symbolEffectValue: AnyValue?
     
     enum CodingKeys: String, CodingKey {
         case type
@@ -95,6 +96,9 @@ class ViewMaterial: Codable, Identifiable {
         case gaugeStyle
         case searchable
         case searchSuggestions
+        case scrollDisable
+        case symbolEffectName
+        case symbolEffectValue
     }
 }
 
@@ -333,6 +337,7 @@ enum ViewType: String, Codable {
     case Toggle
     case ToolBarItem
     case EditButton
+    case Pressable
 }
 
 

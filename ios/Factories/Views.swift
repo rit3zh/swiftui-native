@@ -22,6 +22,43 @@ struct ViewFactory: PresentableProtocol {
 
 
 
+    // MARK: - Pressable
+    
+    @ViewBuilder
+    func pressable() -> some View {
+        if let subviews = material.subviews {
+            let spacing = material.properties?.spacing.toCGFloat() ?? 0
+            let horizontalAlignmentKey = material.properties?.horizontalAlignment ?? "center"
+            let horizontalAlignment = HorizontalAlignment.pick[horizontalAlignmentKey] ?? .center
+            let index = material.values?.index
+            
+            VStack(alignment: horizontalAlignment, spacing: spacing) {
+                ForEach(Array(subviews.enumerated()), id: \.offset) { idx, item in
+                    let gesture = LongPressGesture(minimumDuration: 0)
+                        .onChanged { _ in
+                            onEvent(["onPressIn": ["index": idx]])
+                        }
+                        .onEnded { _ in
+                            onEvent(["onPressOut": ["index": idx]])
+                            onEvent(["onPress": [
+                                "index": idx,
+                                "menuIndex": menuIndex as Any,
+                                "context": context as Any,
+                                "initialIndex": index as Any
+                            ]])
+                        }
+
+                    ViewFactory(material: item, children: children, onEvent: onEvent, index: idx, context: context)
+                        .toPresentable()
+                        .gesture(gesture)
+                }
+            }
+        } else {
+            ErrorMessage(message: "Make sure you have defined a SubView for Pressable")
+        }
+    }
+
+    
 
     // MARK: - Guage
     @ViewBuilder
@@ -127,6 +164,7 @@ struct ViewFactory: PresentableProtocol {
 
     @ViewBuilder
     func listbutton() -> some View {
+        
         let foregroundColor = Color(hex: material.properties?.foregroundColor ?? "#FFFFFF")
         if #available(iOS 15.0, *) {
 
@@ -177,6 +215,7 @@ struct ViewFactory: PresentableProtocol {
                     }
                 }
                 .onDelete(perform: material.enableEditing == true ? delete : nil)
+
                 .onMove(perform: material.enableEditing == true ? move : nil)
             }.environment(\.editMode, .constant(editModeValue))
             .animation(.default, value: material.enableEditing)
@@ -188,12 +227,17 @@ struct ViewFactory: PresentableProtocol {
                     }
                 }
             }
+            .onAppear{
+                UIScrollView.appearance().isScrollEnabled = material.scrollDisable ?? false
+            }
             .modifier(ModifierFactory.ListStyleModifer(style: material.properties?.listStyle ?? ""))
+            
             
             if #available(iOS 16.0, *) {
                 listView.refreshable {
                     onEvent(["onRefresh": [:]])
                 }
+                
             } else {
                 listView
             }
@@ -501,12 +545,19 @@ struct ViewFactory: PresentableProtocol {
 
     // MARK: - Image
 
-    @ViewBuilder func image() -> some View {
+    @ViewBuilder
+    func image() -> some View {
         let cornerRadius = CGFloat(material.properties?.cornerRadius ?? 10)
         if let systemIconName = material.values?.systemIconName {
-            Image(systemName: systemIconName)
+            
+            var image = Image(systemName: systemIconName)
                 .resizable()
                 .scaledToFit()
+
+            if #available(iOS 17.0, *) {
+                let effect = getSymbolEffect(name: material.symbolEffectName)
+                image.applySymbolEffectStyle(material.symbolEffectName, value: EquatableAnyValue(base: material.symbolEffectValue))
+            }
         } else if let localIconName = material.values?.localImageName {
             Image(localIconName)
                 .resizable()
@@ -517,10 +568,12 @@ struct ViewFactory: PresentableProtocol {
                 .resizable()
                 .scaledToFit()
                 .clipShape(.rect(cornerRadius: cornerRadius))
+
         } else {
             ErrorMessage(message: "Image value could not be read")
         }
     }
+
 
     // MARK: - ContentUnavailableView
 
@@ -1212,6 +1265,7 @@ struct ViewFactory: PresentableProtocol {
         case .TextField: textfield()
         case .ToolBarItem: toolBarItem()
         case .EditButton: editButton()
+        case .Pressable: pressable()
 
         default: EmptyView()
         }
@@ -1357,4 +1411,24 @@ func checkSearchPlacement(_ placement: String?) -> SwiftUI.SearchFieldPlacement 
   default:
     return .automatic
   }
+}
+
+
+@available(iOS 17.0, *)
+func getSymbolEffect(name: String?) -> any SymbolEffect {
+    switch name?.lowercased() {
+    case "scale": return .scale
+    case "bounce": return .bounce
+    case "pulse": return .pulse
+    case "appear": return .appear
+    case "disappear": return .disappear
+    case "wiggle":
+        if #available(iOS 18.0, *) {
+            return .wiggle
+        } else {
+            return .pulse
+        }
+    default:
+        return .pulse
+    }
 }

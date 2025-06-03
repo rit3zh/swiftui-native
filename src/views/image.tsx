@@ -1,14 +1,22 @@
-import React from "react";
+import * as React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 import { SFSymbol } from "../types/sf-symbols";
 
-export interface ImageProps extends SwiftUIViewProperties {
+export interface ImageProps<T = unknown> extends SwiftUIViewProperties {
   /** SF Symbol name to display as an icon */
   systemIconName?: SFSymbol;
   /** Name of the local image asset to display */
   localImageName?: string;
   /** URL of the remote image to display */
   imageUrl?: string;
+
+  /** Dynamic value passed to symbolEffect for animation triggering */
+
+  /** @requires iOS 17.0 or later
+   *  Optional value to control symbol effects like rotation or scaling
+   * */
+  symbolEffectName?: string;
+  symbolEffectValue?: T;
 }
 
 /**
@@ -31,16 +39,20 @@ export interface ImageProps extends SwiftUIViewProperties {
  *
  * // Using remote image
  * <Image imageUrl="https://example.com/image.jpg" />
+ *
+ * // With symbol effect value
+ * <Image systemIconName="heart.fill" symbolEffectValue={someBoolean} />
  * ```
  *
  * @param props - The image properties
- * @param props.systemIconName - SF Symbol name to display as an icon
- * @param props.localImageName - Name of the local image asset to display
- * @param props.imageUrl - URL of the remote image to display
+ * @prop {systemIconName} - The SF Symbol name to display as an icon
+ * @param {localImageName} - The name of the local image asset to display
+ * @param {imageUrl} - The URL of the remote image to display
+ * @param {symbolEffectValue} - Optional value to control symbol effects like rotation or scaling
  *
  * @extends SwiftUIViewProperties
  */
-export const Image = (props: ImageProps) => {
+export const Image = <T,>(props: ImageProps<T>): null => {
   return null;
 };
 

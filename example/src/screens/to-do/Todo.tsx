@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, useColorScheme, Alert } from "react-native";
 import React, { useRef, useState } from "react";
-import SwiftUI, { RNSwiftUI, useSwiftUiEvent, ForEach } from "swiftui-native";
+import SwiftUI, { useSwiftUiEvent, ForEach } from "swiftui-native";
 import { EventNameKeys, EventTypes } from "../../keys/EventNameKeys";
 
 interface TodoProps {

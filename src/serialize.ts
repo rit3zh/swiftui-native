@@ -41,6 +41,8 @@ interface SerializedElement {
   tint?: string;
   searchable?: Searchable;
   scrollDisable?: boolean;
+  symbolEffectValue?: string;
+  symbolEffectName?: string;
 }
 
 const filterObjByKeysArray = (
@@ -185,6 +187,8 @@ const serializeReactElement = (
       searchable: props.searchable,
       searchSuggestions: serializedSearchSuggestions,
       scrollDisable: props.scrollDisable,
+      symbolEffectValue: props.symbolEffectValue,
+      symbolEffectName: props.symbolEffectName,
     };
   } else {
     return {
@@ -221,6 +225,8 @@ const serializeReactElement = (
       tint: props.tint,
       searchable: props.searchable,
       scrollDisable: props.scrollDisable,
+      symbolEffectValue: props.symbolEffectValue,
+      symbolEffectName: props.symbolEffectName,
     };
   }
 };

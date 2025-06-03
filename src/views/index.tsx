@@ -8,6 +8,7 @@ import Button from "./button";
 import Circle from "./circle";
 import TextField from "./textfield";
 import ContentUnavailableView from "./contentunavailableview";
+import Pressable from "./pressable";
 import ListButton from "./list-button";
 import EditButton from "./editbutton";
 import ContextMenu from "./contextmenu";
@@ -92,4 +93,5 @@ export {
   Toggle,
   TextField,
   EditButton,
+  Pressable,
 };
