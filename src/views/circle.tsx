@@ -1,4 +1,3 @@
-import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
 export interface CircleProps extends SwiftUIViewProperties {}

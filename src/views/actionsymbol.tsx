@@ -1,4 +1,3 @@
-import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 import type { SFSymbol } from "../types/sf-symbols";
 
