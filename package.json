@@ -1,6 +1,6 @@
 {
   "name": "swiftui-native",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A complete SwiftUI component library for React Native, built with Expo and TypeScript. It allows you to use SwiftUI components in your React Native applications, providing a seamless integration between the two frameworks.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
