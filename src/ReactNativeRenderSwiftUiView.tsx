@@ -1,5 +1,5 @@
-import { requireNativeViewManager } from "expo-modules-core";
 import * as React from "react";
+import { requireNativeViewManager } from "expo-modules-core";
 import { ReactNativeRenderSwiftUiViewProps } from "./ReactNativeRenderSwiftUi.types";
 
 const NativeView: React.ComponentType<ReactNativeRenderSwiftUiViewProps> =

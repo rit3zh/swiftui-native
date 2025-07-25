@@ -58,6 +58,7 @@ class ViewMaterial: Codable, Identifiable {
     var sectionFooter: [ViewMaterial]?
     var isExpandable: Bool?
     var enableEditing: Bool?
+    var anchorPoint: String?
     var maxValue: Int?
     var minValue:Int?
     var value:Int?
@@ -95,6 +96,7 @@ class ViewMaterial: Codable, Identifiable {
         case maximumValueLabel
         case gaugeStyle
         case searchable
+        case anchorPoint
         case searchSuggestions
         case scrollDisable
         case symbolEffectName

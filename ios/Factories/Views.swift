@@ -176,10 +176,8 @@ struct ViewFactory: PresentableProtocol {
                 }
             }
         } else {
-            if #available(iOS 16.0, *) {
-                Button(material.properties?.text ?? "") {
-                    onEvent(["onListButtonPress": ["index": index as Any, "title": material.values?.text as Any]])
-                }
+            Button(material.properties?.text ?? "") {
+                onEvent(["onListButtonPress": ["index": index as Any, "title": material.values?.text as Any]])
             }
         }
     }
@@ -777,25 +775,30 @@ struct ViewFactory: PresentableProtocol {
     }
 
     // MARK: - PopoverView
+    @ViewBuilder
+    func popoverView() -> some View {
+        let anchorPoint = unitPoint(from: material.anchorPoint)
 
-    @ViewBuilder func popoverView() -> some View {
         if let subviews = material.subviews, let optionalSubviews = material.optionalSubviews {
-            PopoverHelperView {
-                ForEach(optionalSubviews) {
-                    ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
-                }
-
-            } trigger: {
-                ForEach(subviews) {
-                    ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
-                }
-            }
-
+            PopoverHelperView(
+                content: {
+                    ForEach(optionalSubviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                },
+                trigger: {
+                    ForEach(subviews) {
+                        ViewFactory(material: $0, children: children, onEvent: onEvent).toPresentable()
+                    }
+                },
+                anchorPoint: anchorPoint
+            )
         } else {
-            ErrorMessage(message: "Make sure you have defined a SubView and an optional SubView for Popover ")
+            ErrorMessage(message: "Make sure you have defined a SubView and an optional SubView for Popover")
         }
     }
 
+    
     // MARK: - SheetView
 
     @ViewBuilder func sheetView() -> some View {
@@ -1430,5 +1433,20 @@ func getSymbolEffect(name: String?) -> any SymbolEffect {
         }
     default:
         return .pulse
+    }
+}
+
+func unitPoint(from string: String?) -> UnitPoint {
+    switch string?.lowercased() {
+    case "topleading": return .topLeading
+    case "top": return .top
+    case "toptrailing": return .topTrailing
+    case "leading": return .leading
+    case "center": return .center
+    case "trailing": return .trailing
+    case "bottomleading": return .bottomLeading
+    case "bottom": return .bottom
+    case "bottomtrailing": return .bottomTrailing
+    default: return .topLeading // fallback
     }
 }

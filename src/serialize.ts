@@ -40,6 +40,7 @@ interface SerializedElement {
   step?: number;
   tint?: string;
   searchable?: Searchable;
+  anchorPoint?: string;
   scrollDisable?: boolean;
   symbolEffectValue?: string;
   symbolEffectName?: string;
@@ -189,6 +190,7 @@ const serializeReactElement = (
       scrollDisable: props.scrollDisable,
       symbolEffectValue: props.symbolEffectValue,
       symbolEffectName: props.symbolEffectName,
+      anchorPoint: props.anchorPoint,
     };
   } else {
     return {
@@ -227,6 +229,7 @@ const serializeReactElement = (
       scrollDisable: props.scrollDisable,
       symbolEffectValue: props.symbolEffectValue,
       symbolEffectName: props.symbolEffectName,
+      anchorPoint: props.anchorPoint,
     };
   }
 };

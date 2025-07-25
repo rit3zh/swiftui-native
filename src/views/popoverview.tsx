@@ -6,6 +6,7 @@ export interface PopoverViewProps extends SwiftUIViewProperties {
   children: React.ReactNode;
   /** Content that triggers the popover presentation */
   optionalSubviews: React.ReactNode;
+  anchorPoint?: string;
 }
 
 /**

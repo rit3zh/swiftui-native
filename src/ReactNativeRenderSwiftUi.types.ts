@@ -171,6 +171,7 @@ export interface SwiftUIViewProperties {
   paddingLeft?: number;
   paddingRight?: number;
   paddingTop?: number;
+
   paddingBottom?: number;
 }
 export type SwiftUiJson = {

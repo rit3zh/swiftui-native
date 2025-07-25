@@ -15,17 +15,29 @@ struct PopoverHelperView<Content: View, Trigger: View>: View {
     @State private var showingPopover = false
     @ViewBuilder let content: Content
     @ViewBuilder let trigger: Trigger
-    let text: String = "Open"
+    let anchorPoint: UnitPoint
+
     var body: some View {
-        trigger
-            .onTapGesture {
-                showingPopover = true
-            }
-            .popover(isPresented: $showingPopover) {
-                content
-            }
+        if #available(iOS 16.4, *) {
+            trigger
+                .onTapGesture {
+                    showingPopover = true
+                }
+                .popover(isPresented: $showingPopover, attachmentAnchor: .point(anchorPoint)) {
+                    content.presentationCompactAdaptation(.none)
+                }
+        } else {
+            trigger
+                .onTapGesture {
+                    showingPopover = true
+                }
+                .popover(isPresented: $showingPopover, attachmentAnchor: .point(anchorPoint)) {
+                    content
+                }
+        }
     }
 }
+
 
 struct SheetHelperView<Content: View, Trigger: View>: View {
     @State private var showingSheet = false

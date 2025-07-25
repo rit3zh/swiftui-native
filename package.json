@@ -34,8 +34,8 @@
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@types/react-native": "^0.73.0",
-    "expo-module-scripts": "^3.5.2",
-    "expo-modules-core": "^1.12.14",
+    "expo-module-scripts": "^4.1.9",
+    "expo-modules-core": "^2.5.0",
     "release-it": "^19.0.1",
     "typedoc": "^0.28.2",
     "typedoc-plugin-markdown": "^4.6.2"

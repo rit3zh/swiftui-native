@@ -7,7 +7,7 @@ export const Settings: React.FC = (): React.ReactNode => {
   return (
     <SwiftUI.RootView>
       <SwiftUI.NavigationView title="Settings">
-        <SwiftUI.List listStyle="insetGrouped">
+        <SwiftUI.List listStyle="automatic">
           <SwiftUI.Section
             optionalSubviews={<SwiftUI.Text>Profile</SwiftUI.Text>}
           >
