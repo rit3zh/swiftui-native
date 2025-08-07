@@ -2,6 +2,8 @@ import React from "react";
 import { SwiftUIViewProperties } from "../ReactNativeRenderSwiftUi.types";
 
 export interface ListProps extends SwiftUIViewProperties {
+  scrollViewBackgroundVisibility?: "visible" | "hidden";
+  scrollDisable?: boolean;
   /** Content to be displayed in the list */
   children: React.ReactNode;
   /** Whether to enable full swipe for leading swipe actions */
@@ -15,7 +17,6 @@ export interface ListProps extends SwiftUIViewProperties {
   /** Whether to enable editing mode for the list */
   enableEditing?: boolean;
   /** Whether to disable scrolling for the list */
-
   /**
    * Array of components to display as a toolbar in the list.
    */

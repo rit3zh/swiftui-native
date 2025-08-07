@@ -30,7 +30,7 @@ interface SerializedElement {
   value?: number;
   minValue?: number;
   maxValue?: number;
-
+  scrollViewBackgroundVisibility?: string;
   gaugeStyle?: string;
   currentValueLabel?: SerializedElement[];
   searchSuggestions?: SerializedElement[];
@@ -191,6 +191,7 @@ const serializeReactElement = (
       symbolEffectValue: props.symbolEffectValue,
       symbolEffectName: props.symbolEffectName,
       anchorPoint: props.anchorPoint,
+      scrollViewBackgroundVisibility: props?.scrollViewBackgroundVisibility,
     };
   } else {
     return {
@@ -203,6 +204,7 @@ const serializeReactElement = (
       leadingSwipeActions: serializedOLeadingSwipeActions || [],
       trailingSwipeActions: serializedOtrailingSwipeActions || [],
       renderListToolBar: serializeToolBarRenderer || [],
+      scrollViewBackgroundVisibility: props?.scrollViewBackgroundVisibility,
       leadingSwipeActionFullSwipeEnable:
         props.leadingSwipeActionFullSwipeEnable,
       trailingSwipeActionFullSwipeEnable:

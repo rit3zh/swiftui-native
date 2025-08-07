@@ -1,6 +1,7 @@
 export const SwiftUIViewPropertieKeys = [
   "font",
   "fontWeight",
+  "fontSize",
   "foregroundColor",
   "borderColor",
   "borderType",

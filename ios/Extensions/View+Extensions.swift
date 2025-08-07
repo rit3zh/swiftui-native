@@ -14,6 +14,16 @@ extension View {
         }
     }
     
+    @available(iOS 16.0, *)
+    @ViewBuilder
+     func conditionalScrollContentBackground(_ visibility: String?) -> some View {
+         if visibility == "hidden" {
+             self.scrollContentBackground(.hidden)
+         } else {
+             self.scrollContentBackground(.visible)
+         }
+     }
+    
     
     
     @ViewBuilder
@@ -49,6 +59,20 @@ extension View {
             self.formStyle(.automatic)
         default:
             self.formStyle(.grouped)
+        }
+    }
+    
+    
+    @available(iOS 16.0, *)
+    @ViewBuilder
+    func applyListScrollStyle(_ style: String?) -> some View {
+        switch style?.lowercased() {
+        case "hidden":
+            self.scrollContentBackground(.hidden)
+        case "visible":
+            self.scrollContentBackground(.visible)
+        default:
+            self.scrollContentBackground(.automatic)
         }
     }
     

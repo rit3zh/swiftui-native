@@ -232,9 +232,7 @@ struct ViewFactory: PresentableProtocol {
             
             
             if #available(iOS 16.0, *) {
-                listView.refreshable {
-                    onEvent(["onRefresh": [:]])
-                }
+                listView.scrollDisabled(material.scrollDisable ?? false) .applyListScrollStyle(material.scrollViewBackgroundVisibility)
                 
             } else {
                 listView
@@ -244,10 +242,6 @@ struct ViewFactory: PresentableProtocol {
             ErrorMessage(message: "Make sure you have defined a SubView for List")
         }
     }
-
-
-
-
     // MARK: - Section
 
     @ViewBuilder
@@ -510,24 +504,48 @@ struct ViewFactory: PresentableProtocol {
 
     // MARK: - Text
 
-    @ViewBuilder func text() -> some View {
+    @ViewBuilder
+    func text() -> some View {
         let fontHashValue = material.properties?.font ?? "body"
-        let font = Font.pick[fontHashValue]
+        let fontSize = material.properties?.fontSize
         let fontWeightHashValue = material.properties?.fontWeight ?? "regular"
         let fontWeight = Font.Weight.pick[fontWeightHashValue]
         let markdownEnabled = material.properties?.enableMarkdown ?? false
-        if markdownEnabled {
-            Text(LocalizedStringKey(material.values?.text ?? ""))
-                .font(font)
-                .fontWeight(fontWeight)
-        }
-        else {
-            Text(material.values?.text ?? "")
-                .font(font)
-                .fontWeight(fontWeight)
-        }
+        let textValue = material.values?.text ?? ""
 
+        let resolvedFont: Font = {
+            if let size = fontSize {
+                if #available(iOS 16.0, *) {
+                    return .system(size: CGFloat(size), weight: fontWeight)
+                } else {
+                    return Font.pick[fontHashValue] ?? .body
+                }
+            } else {
+                return Font.pick[fontHashValue] ?? .body
+            }
+        }()
+
+        if markdownEnabled {
+            if #available(iOS 16.0, *) {
+                Text(LocalizedStringKey(textValue))
+                    .font(resolvedFont)
+            } else {
+                Text(LocalizedStringKey(textValue))
+                    .font(resolvedFont)
+            }
+        } else {
+            if #available(iOS 16.0, *) {
+                Text(textValue)
+                    .font(resolvedFont)
+                    .contentTransition(.numericText())
+            } else {
+                Text(textValue)
+                    .font(resolvedFont)
+            }
+        }
     }
+
+
 
     // MARK: - Label
 
@@ -987,7 +1005,7 @@ struct ViewFactory: PresentableProtocol {
 
 
     @ViewBuilder
-    func textfield () -> some View{
+    func textfield() -> some View{
         let key = material.values?.key ?? "textFieldChange"
         let initialText = material.values?.text ?? ""
         let placeholder = material.values?.placeholder ?? ""
@@ -1002,9 +1020,6 @@ struct ViewFactory: PresentableProtocol {
                 material.values?.text = newText
                 onEvent([key: ["text": newText]])
             })).applyTextFieldStyle(textFieldStyle)
-
-
-
     }
 
     @ViewBuilder

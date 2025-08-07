@@ -11,6 +11,7 @@ export interface MeshGradientProps extends SwiftUIViewProperties {}
  *
  * @param children - The views to display in the LazyVStack
  * @extends SwiftUIViewProperties
+ * @deprecated
  *
  *
  *

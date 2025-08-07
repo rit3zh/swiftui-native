@@ -1,4 +1,4 @@
-import type { StyleProp, ViewProps } from "react-native";
+import type { ViewProps } from "react-native";
 import type { SFSymbol } from "./types/sf-symbols/index";
 
 export type SwiftUiEvent = any;
@@ -129,6 +129,7 @@ export interface SwiftUIViewValues {
 export interface SwiftUIViewProperties {
   font?: FontStyle;
   fontWeight?: FontWeight;
+  fontSize?: number;
   foregroundColor?: string;
   borderColor?: string;
   borderType?: string;

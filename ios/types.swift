@@ -68,6 +68,7 @@ class ViewMaterial: Codable, Identifiable {
     var scrollDisable: Bool?
     var symbolEffectName: String?
     var symbolEffectValue: AnyValue?
+    var scrollViewBackgroundVisibility: String?
     
     enum CodingKeys: String, CodingKey {
         case type
@@ -101,11 +102,13 @@ class ViewMaterial: Codable, Identifiable {
         case scrollDisable
         case symbolEffectName
         case symbolEffectValue
+        case scrollViewBackgroundVisibility
     }
 }
 
 class ViewProperties: Codable {
     var font: String? = "body"
+    var fontSize: Int? = 0
     var fontWeight: String? = "body"
     var foregroundColor: String? = "#ffffff" // Hex
     var borderColor: String? = "#ff0000" // Hex
